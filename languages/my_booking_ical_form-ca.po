@@ -1,0 +1,285 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: My Booking iCal Form\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Oscar Periche <hola@oscarperiche.com>\n"
+"Language-Team: Metalinked <info@metalinked.net>\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.6\n"
+
+msgid "First Name"
+msgstr "Nom"
+
+msgid "Last Name"
+msgstr "Cognoms"
+
+msgid "Email"
+msgstr "Correu electrònic"
+
+msgid "Phone"
+msgstr "Telèfon"
+
+msgid "Entry date"
+msgstr "Data d'entrada"
+
+msgid "Departure date"
+msgstr "Data de sortida"
+
+msgid "Last night"
+msgstr "Darrera nit"
+
+msgid "Comments"
+msgstr "Comentaris"
+
+msgid "Request received"
+msgstr "Petició rebuda"
+
+msgid "Validated"
+msgstr "Validada"
+
+msgid "I have read and accept the %s"
+msgstr "He llegit i accepto la %s"
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "We will confirm your reservation by email shortly."
+msgstr "Confirmarem la teva reserva per correu electrònic en breu."
+
+msgid "Reservation request through the website"
+msgstr "Petició de reserva a través de la web"
+
+msgid "Title"
+msgstr "Títol"
+
+msgid "Requests"
+msgstr "Peticions"
+
+msgid "Are you sure to delete this record?"
+msgstr "Segur que vols eliminar aquest registre?"
+
+msgid "View Requests"
+msgstr "Veure peticions"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Invalidate"
+msgstr "Invalidar"
+
+msgid "Are you sure to remove validation from this request?"
+msgstr "Segur que vols eliminar la validació d'aquesta petició?"
+
+msgid "Validate"
+msgstr "Validar"
+
+msgid "Are you sure to validate this request?"
+msgstr "Segur que vols validar aquesta petició?"
+
+msgid "View"
+msgstr "Veure"
+
+msgid "Add Form"
+msgstr "Afegir Formulari"
+
+msgid ""
+"Below, you can create a form to receive reservation requests. Please note that "
+"a separate form needs to be created for each apartment."
+msgstr ""
+"A continuació pots crear un formulari per rebre peticions de reserva. Tingues "
+"en compte que cal un formulari per a cada apartament."
+
+msgid "Apartment name"
+msgstr "Nom de l'apartament"
+
+msgid "Edit Form"
+msgstr "Editar formulari"
+
+msgid ""
+"Below, you can edit a form to receive reservation requests. Please note that a "
+"separate form needs to be created for each apartment."
+msgstr ""
+"A continuació pots editar el formulari per rebre peticions de reserva. Tingues "
+"en compte que cal un formulari per a cada apartament."
+
+msgid "Save"
+msgstr "Desar"
+
+msgid "My Booking iCal Forms Settings"
+msgstr "Configuració de My Booking iCal Forms"
+
+msgid "Send an email notifying of a new request"
+msgstr "Enviar una notificació per correu electrònic en rebre una nova petició"
+
+msgid "No"
+msgstr "No"
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "Email where to send received requests"
+msgstr "Correu electrònic on enviar les notificacions de les peticions rebudes"
+
+msgid "Secondary email where to send received requests (optional)"
+msgstr "Correu electrònic secundari on enviar les notificacions (opcional)"
+
+msgid "Forms"
+msgstr "Formularis"
+
+msgid ""
+"Below, you can make adjustments related to the reservation request form that "
+"will be visible to the user on the website."
+msgstr ""
+"A continuació pots fer ajustos relacionats amb el formulari de petició de "
+"reserva que veuran els usuaris al web."
+
+msgid "Show form label tags"
+msgstr "Mostrar les etiquetes label"
+
+msgid ""
+"The placeholder attribute will be used to add field information when the form "
+"label is not visible."
+msgstr ""
+"S'utilitzarà l'atribut placeholder per afegir informació del camp quan "
+"l'etiqueta label no sigui visible."
+
+msgid "Forms list"
+msgstr "Llistat de formularis"
+
+msgid "Add New"
+msgstr "Afegir Nou"
+
+msgid ""
+"Below is a list of reservation request forms created for each apartment. Please "
+"note that a separate form needs to be created for each apartment."
+msgstr ""
+"A continuació es mostra el llistat de formularis de peticions de reserva per a "
+"cada apartament. Tingues en compte que cal un formulari per a cada apartament."
+
+msgid "Request received on %s at %s"
+msgstr "Petició rebuda el %s a les %s"
+
+msgid "Back"
+msgstr "Tornar"
+
+msgid "List of requests received for this apartment."
+msgstr "Llistat de peticions rebudes per a aquest apartament."
+
+msgid "Privacy Policy"
+msgstr "Política de privacitat"
+
+msgid "Minimum number of days that can be reserved"
+msgstr "Nombre mínim de dies que es poden reservar"
+
+msgid "Each apartment has the option to customize this value."
+msgstr "Aquest valor es pot modificar individualment per a cada apartament."
+
+msgid "Currency"
+msgstr "Moneda"
+
+msgid "General price"
+msgstr "Preu general"
+
+msgid "Add prices"
+msgstr "Afegir preus"
+
+msgid "Add price"
+msgstr "Afegir preu"
+
+msgid "Edit price"
+msgstr "Editar preu"
+
+msgid ""
+"There is a possibility of assigning special prices to certain dates. As long as "
+"there is no special price for a specific date, the general price will be "
+"applied."
+msgstr ""
+"Es poden assignar preus especials per a determinades dates. Sempre que no hi "
+"hagi un preu especial per a una data concreta, s'aplicarà el preu general."
+
+msgid "Special prices between dates"
+msgstr "Preus especials entre dates"
+
+msgid "From"
+msgstr "Des de"
+
+msgid "To"
+msgstr "Fins a"
+
+msgid "Price"
+msgstr "Preu"
+
+msgid "Day"
+msgstr "Dia"
+
+msgid "Days"
+msgstr "Dies"
+
+msgid "Total price"
+msgstr "Preu total"
+
+msgid "Reference"
+msgstr "Referència"
+
+msgid "Maximum capacity"
+msgstr "Capacitat màxima (persones)"
+
+msgid "Leave blank if not applicable"
+msgstr "Deixar en blanc si no aplica"
+
+msgid "Parking option"
+msgstr "Opció d'aparcament"
+
+msgid "Pending"
+msgstr "Pendent"
+
+msgid "Status"
+msgstr "Estat"
+
+msgid "Request summary"
+msgstr "Resum de la petició"
+
+msgid "Data"
+msgstr "Dades"
+
+msgid "Pending review"
+msgstr "Pendent de revisió"
+
+msgid "Denied"
+msgstr "Denegada"
+
+msgid "Guests"
+msgstr "Persones"
+
+msgid "View Details"
+msgstr "Veure detalls"
+
+msgid "Will you need parking?"
+msgstr "Necessitaràs aparcament?"
+
+msgid "Select the number of people"
+msgstr "Selecciona el nombre de persones"
+
+msgid "Nights"
+msgstr "Nits"
+
+msgid "Departure date is the next day before 11am."
+msgstr "La data de sortida és l'endemà abans de les 11 h."
+
+msgid ""
+"We have sent an email to the provided address with the summary of your booking "
+"request details. You will receive the confirmation within 24 hours."
+msgstr ""
+"Hem enviat un correu electrònic a l'adreça facilitada amb el resum de la teva "
+"petició de reserva. Rebràs la confirmació en 24 hores."
+
+msgid "Request sent"
+msgstr "Petició enviada"

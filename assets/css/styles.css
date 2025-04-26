@@ -1,0 +1,256 @@
+form.booking_ical_form,
+form.booking_ical_form * {
+    -webkit-box-sizing: border-box; 
+   -moz-box-sizing: border-box; 
+    box-sizing: border-box; 
+}
+
+form.booking_ical_form .ui-datepicker-month,
+form.booking_ical_form .ui-datepicker-year {
+    font-family: Barlow !important;
+    color: #333333;
+    font-size: 15px;  font-weight: 500;
+}
+
+form.booking_ical_form .form-group {
+    margin-bottom: 20px;
+}
+
+form.booking_ical_form label.hidden {
+    display: none;
+}
+
+form.booking_ical_form input:not([type=checkbox]):not([type=radio]),
+form.booking_ical_form select {
+    width: 100%;
+    padding: 0 8px;
+    line-height: 2;
+    min-height: 35px;
+    font-family: var(--wp--preset--font-family--body);
+    font-size: var(--wp--preset--font-size--medium);
+    font-style: normal;
+    font-weight: 400;
+    background-color: #FFF;
+    border: 1px solid #999;
+}
+
+form.booking_ical_form textarea {
+    width: 100%;
+    padding: 8px;
+    font-family: var(--wp--preset--font-family--body);
+    font-size: var(--wp--preset--font-size--medium);
+    font-style: normal;
+    font-weight: 400;
+    border: 1px solid #999;
+}
+
+form.booking_ical_form button {
+    background: #2271b1;
+    color: #fff;
+    text-shadow: none;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 2.15384615;
+    min-height: 30px;
+    margin: 0;
+    padding: 0 10px;
+    cursor: pointer;
+    border-color: #2271b1;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+form.booking_ical_form span {
+    font-size: 14px;
+    font-weight: 100;
+}
+
+form.booking_ical_form .form-group.parsley-error {
+    margin-bottom: 0;
+}
+
+form.booking_ical_form #parsley-id-multiple-acceptance {
+    margin-bottom: 20px;
+}
+
+form.booking_ical_form .calendar-col {
+    width: calc(50% - 8px);
+    float: left;
+    /*margin-bottom: 20px;*/
+}
+
+form.booking_ical_form .calendar-col:first-child {
+    margin-right: 15px;
+}
+
+form.booking_ical_form #d_entry_date,
+form.booking_ical_form #d_departure_date {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+form.booking_ical_form #entry_date,
+form.booking_ical_form #departure_date {
+    display: none !important;
+}
+
+.ui-datepicker {
+    width: 100%;
+}
+
+a.ui-state-default {
+    background-color: #92b8d3 !important;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active,
+.ui-state-default:hover, .ui-widget-content .ui-state-default:hover {
+    background-color: black !important;
+    color: #FFF !important;
+}
+
+form.booking_ical_form label {
+    width: 100%;
+    display: block;
+}
+
+#errorDates {
+    color: #94484b;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+#priceContainer ul.priceList {
+    list-style: none;
+    margin-bottom: 10px;
+    padding: 0;
+}
+
+#priceContainer div {
+    font-weight: 600;
+}
+
+form.booking_ical_form .form-group input[type=radio] {
+    margin-right: 2px;
+}
+
+form.booking_ical_form .form-group input[type=radio]:last-child {
+    margin-left: 12px;
+}
+
+form.booking_ical_form .form-group a.accept-link {
+    text-decoration: underline;
+}
+
+form.booking_ical_form .form-group a.accept-link:hover {
+    text-decoration: none;  
+    color: #ffffff !important;
+}
+
+.style-dark form.booking_ical_form textarea,
+.style-dark form.booking_ical_form textarea:focus {
+    border-color: #fbfbfb !important;
+    min-height: 160px;
+}
+
+.style-dark form.booking_ical_form ::placeholder, 
+.style-dark form.booking_ical_form ::placeholder,
+.style-dark form.booking_ical_form input {
+    color: #7c7c7c !important;
+}
+
+.style-dark form.booking_ical_form select {
+    color: #7c7c7c !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right .9rem center;
+    background-size: 14px 10px;
+}
+
+form.booking_ical_form #sendForm {
+    font-weight: 600 !important;
+    font-family: Barlow !important;  
+    background-color: #FFF !important;
+    color: #303133 !important;
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    border-width: 1px;
+    border-radius: 2px;
+    padding: 15px 36px !important;
+    display: inline-block;
+    font-style: normal !important;
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    cursor: pointer;
+    background-image: none;
+    border-style: solid;
+    border-radius: 2px;
+    outline: none;
+    white-space: pre-wrap;
+    -webkit-text-stroke: 0px;
+    line-height: normal;
+    transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86v), border-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+
+form.booking_ical_form #sendForm:hover {
+    color: #ffffff !important;
+    background-color: transparent !important;
+    border-color: #ffffff !important;
+}
+
+form.booking_ical_form .info-additional {
+    font-size: 14px;
+}
+
+.my-popup {
+    margin: 0 !important;
+    max-width: 100% !important;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1b1d1fc9 !important;
+}
+
+.my-popup-content {
+    margin: 15% auto;
+    padding: 20px 20px 40px;
+    background-color: #7c7c7c !important;
+    border: 1px solid #7c7c7c !important;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.my-popup-close {
+    color: #fff;
+    float: right !important;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.my-popup-close:hover,
+.my-popup-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media (max-width:1396px) {
+    form.booking_ical_form .calendar-col {
+        width: 100%;
+    }
+}

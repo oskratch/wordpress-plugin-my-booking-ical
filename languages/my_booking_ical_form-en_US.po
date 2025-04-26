@@ -1,0 +1,264 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: My Booking iCal Form\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Oscar Periche <hola@oscarperiche.com>\n"
+"Language-Team: Metalinked <info@metalinked.net>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.6\n"
+
+msgid "First Name"
+msgstr "First Name"
+
+msgid "Last Name"
+msgstr "Last Name"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Phone"
+msgstr "Phone"
+
+msgid "Entry date"
+msgstr "Entry date"
+
+msgid "Departure date"
+msgstr "Departure date"
+
+msgid "Last night"
+msgstr "Last night"
+
+msgid "Comments"
+msgstr "Comments"
+
+msgid "Request received"
+msgstr "Request received"
+
+msgid "Validated"
+msgstr "Validated"
+
+msgid "I have read and accept the %s"
+msgstr "I have read and accept the %s"
+
+msgid "Send"
+msgstr "Send"
+
+msgid "We will confirm your reservation by email shortly."
+msgstr "We will confirm your reservation by email shortly."
+
+msgid "Reservation request through the website"
+msgstr "Reservation request through the website"
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Requests"
+msgstr "Requests"
+
+msgid "Are you sure to delete this record?"
+msgstr "Are you sure you want to delete this record?"
+
+msgid "View Requests"
+msgstr "View Requests"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Invalidate"
+msgstr "Invalidate"
+
+msgid "Are you sure to remove validation from this request?"
+msgstr "Are you sure you want to remove validation from this request?"
+
+msgid "Validate"
+msgstr "Validate"
+
+msgid "Are you sure to validate this request?"
+msgstr "Are you sure you want to validate this request?"
+
+msgid "View"
+msgstr "View"
+
+msgid "Add Form"
+msgstr "Add Form"
+
+msgid "Below, you can create a form to receive reservation requests. Please note that a separate form needs to be created for each apartment."
+msgstr "Below, you can create a form to receive reservation requests. Please note that a separate form must be created for each apartment."
+
+msgid "Apartment name"
+msgstr "Apartment name"
+
+msgid "Edit Form"
+msgstr "Edit Form"
+
+msgid "Below, you can edit a form to receive reservation requests. Please note that a separate form needs to be created for each apartment."
+msgstr "Below, you can edit a form to receive reservation requests. Please note that a separate form must be created for each apartment."
+
+msgid "Save"
+msgstr "Save"
+
+msgid "My Booking iCal Forms Settings"
+msgstr "My Booking iCal Forms Settings"
+
+msgid "Send an email notifying of a new request"
+msgstr "Send an email notification for a new request"
+
+msgid "No"
+msgstr "No"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "Email where to send received requests"
+msgstr "Email address to send received request notifications"
+
+msgid "Secondary email where to send received requests (optional)"
+msgstr "Secondary email address to send received request notifications (optional)"
+
+msgid "Forms"
+msgstr "Forms"
+
+msgid "Below, you can make adjustments related to the reservation request form that will be visible to the user on the website."
+msgstr "Below, you can make adjustments related to the reservation request forms that will be visible to users on the website."
+
+msgid "Show form label tags"
+msgstr "Show form label tags"
+
+msgid "The placeholder attribute will be used to add field information when the form label is not visible."
+msgstr "The placeholder attribute will be used to add field information when the label is not visible."
+
+msgid "Forms list"
+msgstr "Forms list"
+
+msgid "Add New"
+msgstr "Add New"
+
+msgid ""
+"Below is a list of reservation request forms created for each apartment. Please note that a separate form needs to be created for each "
+"apartment."
+msgstr ""
+"Below is a list of reservation request forms created for each apartment. Please note that a separate form must be created for each apartment."
+
+msgid "Request received on %s at %s"
+msgstr "Request received on %s at %s"
+
+msgid "Back"
+msgstr "Back"
+
+msgid "List of requests received for this apartment."
+msgstr "List of requests received for this apartment."
+
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+msgid "Minimum number of days that can be reserved"
+msgstr "Minimum number of days that can be reserved"
+
+msgid "Each apartment has the option to customize this value."
+msgstr "Each apartment can customize this value individually."
+
+msgid "Currency"
+msgstr "Currency"
+
+msgid "General price"
+msgstr "General price"
+
+msgid "Add prices"
+msgstr "Add prices"
+
+msgid "Add price"
+msgstr "Add price"
+
+msgid "Edit price"
+msgstr "Edit price"
+
+msgid ""
+"There is a possibility of assigning special prices to certain dates. As long as there is no special price for a specific date, the general "
+"price will be applied."
+msgstr "You can assign special prices for specific dates. If no special price is set for a specific date, the general price will apply."
+
+msgid "Special prices between dates"
+msgstr "Special prices between dates"
+
+msgid "From"
+msgstr "From"
+
+msgid "To"
+msgstr "To"
+
+msgid "Price"
+msgstr "Price"
+
+msgid "Day"
+msgstr "Day"
+
+msgid "Days"
+msgstr "Days"
+
+msgid "Total price"
+msgstr "Total price"
+
+msgid "Reference"
+msgstr "Reference"
+
+msgid "Maximum capacity"
+msgstr "Maximum capacity (people)"
+
+msgid "Leave blank if not applicable"
+msgstr "Leave blank if not applicable"
+
+msgid "Parking option"
+msgstr "Parking option"
+
+msgid "Pending"
+msgstr "Pending"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Request summary"
+msgstr "Request summary"
+
+msgid "Data"
+msgstr "Data"
+
+msgid "Pending review"
+msgstr "Pending review"
+
+msgid "Denied"
+msgstr "Denied"
+
+msgid "Guests"
+msgstr "Guests"
+
+msgid "View Details"
+msgstr "View Details"
+
+msgid "Will you need parking?"
+msgstr "Will you need parking?"
+
+msgid "Select the number of people"
+msgstr "Select the number of people"
+
+msgid "Nights"
+msgstr "Nights"
+
+msgid "Departure date is the next day before 11am."
+msgstr "Departure date is the next day before 11am."
+
+msgid ""
+"We have sent an email to the provided address with the summary of your booking request details. You will receive the confirmation within 24 "
+"hours."
+msgstr ""
+"We have sent an email to the provided address with the summary of your booking request details. You will receive confirmation within 24 hours."
+
+msgid "Request sent"
+msgstr "Request sent"

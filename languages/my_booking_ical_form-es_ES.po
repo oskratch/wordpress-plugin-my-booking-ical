@@ -1,0 +1,290 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.9\n"
+"Project-Id-Version: My Booking iCal Form\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Oscar Periche <hola@oscarperiche.com>\n"
+"Language-Team: Metalinked <info@metalinked.net>\n"
+"Language: es_ES\n"
+
+msgid "First Name"
+msgstr "Nombre"
+
+msgid "Last Name"
+msgstr "Apellidos"
+
+msgid "Email"
+msgstr "Correo electrónico"
+
+msgid "Phone"
+msgstr "Teléfono"
+
+msgid "Entry date"
+msgstr "Fecha de entrada"
+
+msgid "Departure date"
+msgstr "Fecha de salida"
+
+msgid "Last night"
+msgstr "Última noche"
+
+msgid "Comments"
+msgstr "Comentarios"
+
+msgid "Request received"
+msgstr "Petición recibida"
+
+msgid "Validated"
+msgstr "Validada"
+
+msgid "I have read and accept the %s"
+msgstr "He leido y acepto la %s"
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "We will confirm your reservation by email shortly."
+msgstr "En breve confirmaremos tu reserva por correo electrónico."
+
+msgid "Reservation request through the website"
+msgstr "Petición de reserva a través de la web"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Requests"
+msgstr "Peticiones"
+
+msgid "Are you sure to delete this record?"
+msgstr "¿Estás seguro de eliminar este registro?"
+
+msgid "View Requests"
+msgstr "Ver peticiones"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Invalidate"
+msgstr "Invalidar"
+
+msgid "Are you sure to remove validation from this request?"
+msgstr "¿Estás segur@ de eliminar la validación de esta petición?"
+
+msgid "Validate"
+msgstr "Validar"
+
+msgid "Are you sure to validate this request?"
+msgstr "¿Estás segur@ de validar esta petición?"
+
+msgid "View"
+msgstr "Ver"
+
+msgid "Add Form"
+msgstr "Añadir Formulario"
+
+msgid ""
+"Below, you can create a form to receive reservation requests. Please note "
+"that a separate form needs to be created for each apartment."
+msgstr ""
+"A continuación puedes crear un formulario para recibir peticiones de "
+"reserva. Ten en cuenta que necesitas un formulario para cada apartamento."
+
+msgid "Apartment name"
+msgstr "Nombre del apartamento"
+
+msgid "Edit Form"
+msgstr "Editar formulario"
+
+msgid ""
+"Below, you can edit a form to receive reservation requests. Please note that "
+"a separate form needs to be created for each apartment."
+msgstr ""
+"A continuación puedes editar el formulario para recibir peticiones de "
+"reservas. Ten en cuenta que necesitas un formulario para cada apartamento."
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "My Booking iCal Forms Settings"
+msgstr "Ajustes de My Booking iCal Forms"
+
+msgid "Send an email notifying of a new request"
+msgstr "Enviar una notificación por email al recibir una nueva petición"
+
+msgid "No"
+msgstr "No"
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "Email where to send received requests"
+msgstr ""
+"Correo electrónico donde enviar las notificacions de las peticiones recibidas"
+
+msgid "Secondary email where to send received requests (optional)"
+msgstr ""
+"Correo electrónico secundario donde enviar las notificacions de las "
+"peticiones recibidas (opcional)"
+
+msgid "Forms"
+msgstr "Formularios"
+
+msgid ""
+"Below, you can make adjustments related to the reservation request form that "
+"will be visible to the user on the website."
+msgstr ""
+"A continuación podràs realitzar los ajustes relacionados con los formularios "
+"de las peticiones de reserva que verán los usuarios en la web."
+
+msgid "Show form label tags"
+msgstr "Mostrar las etiquetas label"
+
+msgid ""
+"The placeholder attribute will be used to add field information when the "
+"form label is not visible."
+msgstr ""
+"El atributo placeholder se usuará para añadir la información del campo "
+"cuando la etiqueta label no esté visible."
+
+msgid "Forms list"
+msgstr "Listado de formularios"
+
+msgid "Add New"
+msgstr "Añadir Nuevo"
+
+msgid ""
+"Below is a list of reservation request forms created for each apartment. "
+"Please note that a separate form needs to be created for each apartment."
+msgstr ""
+"A continuación mostramos el listado de formularios de peticiones de reservas "
+"para cada apartamento. Ten en cuenta que se necesita un formulario para cada "
+"apartamento."
+
+msgid "Request received on %s at %s"
+msgstr "Petición recibida el %s a las %s"
+
+msgid "Back"
+msgstr "Volver"
+
+msgid "List of requests received for this apartment."
+msgstr "Listado de peticiones recibidas para este apartamento."
+
+msgid "Privacy Policy"
+msgstr "Política de privacidad"
+
+msgid "Minimum number of days that can be reserved"
+msgstr "Número mínimo de días que se pueden reservar"
+
+msgid "Each apartment has the option to customize this value."
+msgstr "Este valor se podrá modificar individualmente para cada apartamento."
+
+msgid "Currency"
+msgstr "Moneda"
+
+msgid "General price"
+msgstr "Precio general"
+
+msgid "Add prices"
+msgstr "Añadir precios"
+
+msgid "Add price"
+msgstr "Añadir precio"
+
+msgid "Edit price"
+msgstr "Editar precio"
+
+msgid ""
+"There is a possibility of assigning special prices to certain dates. As long "
+"as there is no special price for a specific date, the general price will be "
+"applied."
+msgstr ""
+"Se podrán asignar precios especiales para determinadas fechas. Siempre que "
+"no exista un precio especial para una fecha concreta, se tomará el precio "
+"general."
+
+msgid "Special prices between dates"
+msgstr "Precios especiales entre fechas"
+
+msgid "From"
+msgstr "Desde"
+
+msgid "To"
+msgstr "Hasta"
+
+msgid "Price"
+msgstr "Precio"
+
+msgid "Day"
+msgstr "Día"
+
+msgid "Days"
+msgstr "Días"
+
+msgid "Total price"
+msgstr "Precio Total"
+
+msgid "Reference"
+msgstr "Referencia"
+
+msgid "Maximum capacity"
+msgstr "Capacidad màxima (personas)"
+
+msgid "Leave blank if not applicable"
+msgstr "Dejar en blanco si no aplica"
+
+msgid "Parking option"
+msgstr "Opción de parking"
+
+msgid "Pending"
+msgstr "Pendientes"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Request summary"
+msgstr "Resumen de la solicitud"
+
+msgid "Data"
+msgstr "Datos"
+
+msgid "Pending review"
+msgstr "Pendiente de revisión"
+
+msgid "Denied"
+msgstr "Denegada"
+
+msgid "Guests"
+msgstr "Personas"
+
+msgid "View Details"
+msgstr "Ver detalles"
+
+msgid "Will you need parking?"
+msgstr "¿Vas a necesitar parking?"
+
+msgid "Select the number of people"
+msgstr "Selecciona el número de personas"
+
+msgid "Nights"
+msgstr "Noches"
+
+msgid "Departure date is the next day before 11am."
+msgstr "Fecha de salida el día siguiente antes de las 11 am."
+
+msgid ""
+"We have sent an email to the provided address with the summary of your "
+"booking request details. You will receive the confirmation within 24 hours."
+msgstr ""
+"Hemos enviado un correo a la dirección facilitada con el resumen de los "
+"datos de tu petición de reserva. Recibirás la confirmación en 24 horas."
+
+msgid "Request sent"
+msgstr "Petición enviada"

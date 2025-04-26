@@ -1,0 +1,15 @@
+.table-nopagination .tablenav.top,
+.table-nopagination .tablenav.bottom {
+    display: none !important;
+}
+
+.table-nopagination .alignleft.actions a {
+    top: 0;
+    margin-left: 0;
+    margin-top: 20px;
+}
+
+ul.data-booking strong {
+    font-weight: 700;
+    color: #000;
+}
