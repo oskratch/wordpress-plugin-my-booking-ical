@@ -181,7 +181,7 @@ function my_booking_ical_requests_show() {
     if(isset($_POST['status'])){
         $status = $_POST['status'];
 
-        // Actualitza les dades a la base de dades
+        // Update the data in the database
         $wpdb->update(
             $wpdb->prefix . 'my_booking_ical_requests',
             array(
@@ -249,8 +249,7 @@ function my_booking_ical_requests_delete() {
             array( 'id' => $_GET['id'] ) 
         );
         
-        // Todo: manera provisional de redirecció mitjançant JS. La funció wp_redirect() no funciona perquè ja s'han enviat les capçaleres http. Tal com ho estic fent, 
-        // no deu ser la manera correcta del tot, cal fer-ho d'una altra manera... un altre dia
+        // Todo: provisional redirection method using JS. The wp_redirect() function does not work because HTTP headers have already been sent. The way I am doing it is probably not entirely correct; it should be done differently... another day.
         echo '<script>window.location.href = "' . admin_url('admin.php?page=my_booking_ical_requests&form_id=' . $item->form_id) . '"</script>';
         exit;
     }

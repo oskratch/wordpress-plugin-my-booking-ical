@@ -134,7 +134,7 @@ function my_booking_ical_prices_create() {
         $to_date = $_POST['to_date'];
         $price = $_POST['price'];
 
-        // Guarda les dades a la base de dades
+        // Save the data to the database
         $wpdb->insert(
             $wpdb->prefix . 'my_booking_ical_prices',
             array(
@@ -172,7 +172,7 @@ function my_booking_ical_prices_edit() {
         
         $item = $wpdb->get_row("SELECT form_id FROM " . $wpdb->prefix . "my_booking_ical_prices WHERE id = " . $_POST['id']);
 
-        // Actualitza les dades a la base de dades
+        // Update the data in the database
         $wpdb->update(
             $wpdb->prefix . 'my_booking_ical_prices',
             array(

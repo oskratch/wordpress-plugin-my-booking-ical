@@ -1,15 +1,15 @@
 <?php
 /*
  * Plugin Name: My Booking iCal Form
- * Plugin URI: https://4funkies.com/
+ * Plugin URI: https://metalinked.net/
  * Description: A form that allows you to request apartment or room reservations through contact. A calendar is used to select a date range and connects to an iCal file to turn off reserved dates.
- * Author: Oscar Periche, 4funkies
- * Author URI: https://4funkies.com/
+ * Author: Oscar Periche, Metalinked
+ * Author URI: https://metalinked.net/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Version: 1.0.0
+ * Version: 1.1.0
  * Requires at least: 6.3
- * Requires PHP: 7.4
+ * Requires PHP: 8
  */
 
 defined('ABSPATH') or die("Action not allowed");

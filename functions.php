@@ -77,9 +77,9 @@ function my_booking_ical_shortcode($atts) {
 
         $form_html = "";
 
-        $form_sent = $_GET['form_sent'];
-
-        if(isset($form_sent) && $form_sent == 1){
+        $form_sent = isset($_GET['form_sent']) ? $_GET['form_sent'] : null;
+        
+        if($form_sent == 1){
 
             $form_html .= '<div id="my-popup" class="my-popup">
                 <div class="my-popup-content">
@@ -243,6 +243,7 @@ function my_booking_ical_shortcode($atts) {
         $form_html .= '</div>';
         $form_html .= '</form>';
 
+        $args = array(); // Define $args with appropriate query parameters if needed
         $query = new WP_Query( $args );
         
         $form_html .= "<script>let min_days = " . $item->min_days . ", currency = '" . get_option('currency') . "', dayName = '" . __('Day', 'my_booking_ical_form') . "', nightsName = '" . __('Nights', 'my_booking_ical_form') . "', priceName = '" . __('Price', 'my_booking_ical_form') . "', daysName = '" . __('Days', 'my_booking_ical_form') . "', totalPriceName = '" . __('Total price', 'my_booking_ical_form') . "'; 
@@ -379,7 +380,7 @@ function my_booking_ical_send() {
         $phone = sanitize_text_field($_POST['phone']);
         $entry_date = sanitize_text_field($_POST['entry_date']);
         $departure_date = sanitize_text_field($_POST['departure_date']);
-        $parking = $_POST['parking'];
+        $parking = isset($_POST['parking']) ? sanitize_text_field($_POST['parking']) : '0';
         $guest_count = $_POST['guest_count'];
         $comments = sanitize_text_field($_POST['comments']);
         $summary = $_POST['summary'];
@@ -392,7 +393,7 @@ function my_booking_ical_send() {
 
         // Guarda les dades a la base de dades
         
-        $wpdb->insert(
+        $result = $wpdb->insert(
             $wpdb->prefix . 'my_booking_ical_requests',
             array(
                 'form_id' => $_POST['form_id'],
@@ -420,6 +421,11 @@ function my_booking_ical_send() {
                 '%s'
             )
         );
+
+        if ($result === false) {
+            error_log('Error en la inserció a la base de dades: ' . $wpdb->last_error);
+            wp_die(__('Hi ha hagut un error en guardar les dades. Si us plau, contacta amb l\'administrador.', 'my_booking_ical_form'));
+        }
 
         if(get_option('mbif_emailto_enable')) {
         

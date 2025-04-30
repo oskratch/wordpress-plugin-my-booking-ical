@@ -1,211 +1,128 @@
 jQuery(document).ready(function($) {
-    $('#sendForm').click(function(e){
-        if($('#requestForm')[0].checkValidity()){
-            if($('#entry_date').val() == '' || $('#departure_date').val() == ''){
-                $("#errorDates").html("Selecciona una fecha de entrada y de salida.");
-            }else{
-                if(calculateDaysDifference($('#entry_date').val(), $('#departure_date').val()) < min_days){
-                    $("#errorDates").html("La estancia mínima para este apartamento es de " + min_days + " días.");
-                }else{
-                    $("#summary").val($("#priceContainer").html());
-                    $("#requestForm").submit();
-                }
+    // Handle form submission
+    $('#sendForm').click(function(e) {
+        const entryDate = $('#entry_date').val();
+        const departureDate = $('#departure_date').val();
+        const errorContainer = $("#errorDates");
+
+        if ($('#requestForm')[0].checkValidity()) {
+            if (!entryDate || !departureDate) {
+                errorContainer.html("Selecciona una fecha de entrada y de salida.");
+            } else if (calculateDaysDifference(entryDate, departureDate) < min_days) {
+                errorContainer.html(`La estancia mínima para este apartamento es de ${min_days} días.`);
+            } else {
+                $("#summary").val($("#priceContainer").html());
+                $("#requestForm").submit();
             }
-        }else{
+        } else {
             $('#requestForm')[0].reportValidity();
-        }                
+        }
     });
 
+    // Show popup on page load
     $('#my-popup').fadeIn();
 
-    $('.my-popup-close').on('click', function() {
-        $('#my-popup').fadeOut();
-    });
+    // Close popup when clicking the close button
+    $('.my-popup-close').on('click', () => $('#my-popup').fadeOut());
 
-    // Opcional: Amagar el popup quan es fa clic fora del contingut del popup
-    $(window).on('click', function(e) {
+    // Optional: Hide popup when clicking outside the popup content
+    $(window).on('click', (e) => {
         if ($(e.target).is('#my-popup')) {
             $('#my-popup').fadeOut();
         }
     });
 });
 
-var disabledDates = new Array;
+// Encapsulate disabledDates to avoid global scope pollution
+const disabledDates = [];
 
+// Fetch data from the server and process iCal events
 async function fetchData(url, iniCal) {
     return new Promise((resolve, reject) => {
-        var request = new XMLHttpRequest();
-        request.open('GET', '/wp-content/plugins/my-booking-ical-form/ical_proxy.php?ical_url=' + url, true);
+        const request = new XMLHttpRequest();
+        request.open('GET', `/wp-content/plugins/my-booking-ical-form/ical_proxy.php?ical_url=${url}`, true);
         request.send(null);
 
         request.onreadystatechange = function() {
             if (request.readyState === 4 && request.status === 200) {
-                var type = request.getResponseHeader('Content-Type');
-                if (type.indexOf('text') !== 1) {
-                    var lines = request.responseText.split('\n');
-                    var events_i = 0;
+                const type = request.getResponseHeader('Content-Type');
+                if (type && type.indexOf('text') !== -1) {
+                    const lines = request.responseText.split('\n');
+                    let entryDate, departureDate;
 
-                    for (i = 0; i < lines.length; i++) {
-                        if (lines[i].includes('DTSTART')) {
-                            var entry_date = lines[i].split(':');
-                        }
-                        else if (lines[i].includes('DTEND')) {
-                            var departure_date = lines[i].split(':');
-                        }
-                        else if (lines[i].includes('END:VEVENT')) {
-
-                            for(a=entry_date[1]; a<departure_date[1]; a++){
-                                disabledDates.push(parseInt(a).toString());
+                    lines.forEach((line) => {
+                        if (line.includes('DTSTART')) {
+                            entryDate = line.split(':')[1];
+                        } else if (line.includes('DTEND')) {
+                            departureDate = line.split(':')[1];
+                        } else if (line.includes('END:VEVENT') && entryDate && departureDate) {
+                            // Add all dates between entryDate and departureDate to disabledDates
+                            for (let date = entryDate; date < departureDate; date++) {
+                                disabledDates.push(parseInt(date).toString());
                             }
-
-                            events_i++;
                         }
-                    }
+                    });
 
-                    if(iniCal){
+                    if (iniCal) {
                         iniCalendar();
                     }
                 }
             }
             resolve(true);
-        };  
+        };
     });
 }
 
+// Add one day to a given date string
 function addOneDay(dateString) {
-    var dateParts = dateString.split('-');
-    var day = parseInt(dateParts[0], 10);
-    var month = parseInt(dateParts[1], 10) - 1;
-    var year = parseInt(dateParts[2], 10);
-    var date = new Date(year, month, day);
-
+    const [day, month, year] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     date.setDate(date.getDate() + 1);
 
-    var newDay = date.getDate();
-    var newMonth = date.getMonth() + 1;
-    var newYear = date.getFullYear();
-
-    var formatDay = newDay < 10 ? '0' + newDay : newDay;
-    var formatMonth = newMonth < 10 ? '0' + newMonth : newMonth;
-
-    return formatDay + '-' + formatMonth + '-' + newYear;
+    return formatDateForOutput(date);
 }
 
+// Calculate the difference in days between two dates
 function calculateDaysDifference(date1, date2) {
-    var dateParts1 = date1.split("-");
-    var dateParts2 = date2.split("-");
-    var startDate = new Date(dateParts1[2], dateParts1[1] - 1, dateParts1[0]);
-    var endDate = new Date(dateParts2[2], dateParts2[1] - 1, dateParts2[0]);
-    var difference = endDate.getTime() - startDate.getTime();
-    var daysDifference = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const [day1, month1, year1] = date1.split('-').map(Number);
+    const [day2, month2, year2] = date2.split('-').map(Number);
 
-    return parseInt(daysDifference) + 1;
+    const startDate = new Date(year1, month1 - 1, day1);
+    const endDate = new Date(year2, month2 - 1, day2);
+
+    const difference = endDate - startDate;
+    return Math.floor(difference / (1000 * 60 * 60 * 24)) + 1;
 }
 
+// Get the price for a specific date based on price ranges
 function getPriceForDate(date, priceRangesJson, defaultPrice) {
-    var priceRanges = JSON.parse(priceRangesJson);
-    for (var i = 0; i < priceRanges.length; i++) {
-        var range = priceRanges[i];
-        var startDate = new Date(range.start);
-        var endDate = new Date(range.end);
-        var price = range.price;
+    const priceRanges = JSON.parse(priceRangesJson);
+    for (const range of priceRanges) {
+        const startDate = new Date(range.start);
+        const endDate = new Date(range.end);
 
         if (date >= startDate && date <= endDate) {
-            return removeDecimalIfZero(price);
+            return removeDecimalIfZero(range.price);
         }
     }
-
     return defaultPrice;
 }
 
-function getPriceForDateRange(startDate, endDate, priceRangesJson, defaultPrice) {
-    if(startDate != "" && endDate  != ""){
-
-        var container_error = document.getElementById('errorDates');
-        var container_prices = document.getElementById('priceContainer');
-        
-        if(calculateDaysDifference(startDate, endDate) < min_days){
-            container_error.innerHTML = "La estancia mínima para este apartamento es de " + min_days + " días.";
-            container_prices.innerHTML = "";
-        }else{
-
-            var priceRanges = JSON.parse(priceRangesJson);
-            var totalPrice = 0;
-            var totalDays = 0;
-            var html = '<ul class="priceList">';
-            
-            var formattedStartDate = formatDate(startDate);
-            var formattedEndDate = formatDate(endDate);
-
-            var currentDate = new Date(formattedStartDate);
-            var endDateObj = new Date(formattedEndDate);
-
-            var dayOrder = 1;
-            while (currentDate <= endDateObj) {
-                
-                var formattedDate = formatDateForOutput(currentDate);
-
-                if(!disabledDates.includes(formatDateOnlyNumbers(formattedDate))){
-                    var currentPrice = getPriceForDate(currentDate, priceRangesJson, defaultPrice);
-                    html += '<li>' + dayName + ' ' + dayOrder + ': ' + formattedDate + ', ' + priceName + ': ' + currentPrice + ' ' + currency + '</li>';
-                    totalPrice += currentPrice;
-                    totalDays++;
-                    dayOrder++;
-                }
-
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-
-            html += '</ul>';
-            html += '<div>' + nightsName + ': ' + totalDays + ', ' + totalPriceName + ': ' + totalPrice + ' ' + currency + '</div>';
-
-            container_prices.innerHTML = html;
-            container_error.innerHTML = "";
-        }
-    }
-
-    return true;
-}
-
-function getDisabledDates() {
-    var disabledDates = [];
-    jQuery('#d_entry_date').datepicker('option', 'beforeShowDay', function(date) {
-        if (date) {
-            var dateString = formatDate(date);
-            disabledDates.push(dateString);
-        }
-    });
-    return disabledDates;
-}
-
-function formatDate(date) {
-    var parts = date.split("-");
-    var day = parts[0];
-    var month = parts[1];
-    var year = parts[2];
-    return year + '-' + month + '-' + day;
-}
-
+// Format a date object to "DD-MM-YYYY"
 function formatDateForOutput(date) {
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-    day = (day < 10) ? '0' + day : day;
-    month = (month < 10) ? '0' + month : month;
-    return day + '-' + month + '-' + year;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
 }
 
+// Format a date string to "YYYYMMDD" for comparison
 function formatDateOnlyNumbers(date) {
-    var parts = date.split("-");
-    var day = parts[0];
-    var month = parts[1];
-    var year = parts[2];
-    return year + month + day;
+    const [day, month, year] = date.split('-');
+    return `${year}${month}${day}`;
 }
 
+// Remove decimal if the price is a whole number
 function removeDecimalIfZero(price) {
-    if (price % 1 === 0) {
-        return Math.trunc(price);
-    }
-    return price;
+    return price % 1 === 0 ? Math.trunc(price) : price;
 }
