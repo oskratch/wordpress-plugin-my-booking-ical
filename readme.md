@@ -76,13 +76,8 @@ This plugin synchronizes availability calendars from Booking.com and Airbnb usin
 
 ## License
 
-This plugin is licensed under the **MIT License**.  
-You are free to use, modify, and distribute it, provided that proper credit is given to the original author.  
-
-> *Note: This plugin uses third-party libraries, such as Datepicker, which may have their own licensing terms. Please review and comply with their respective licenses.*
+This plugin is licensed under the GPLv2 or later. See [LICENSE](LICENSE) for details.
 
 ---
 
-## Author
-
-Developed by Oscar Periche.
+**Developed by Oscar Periche. Contributions welcome!**

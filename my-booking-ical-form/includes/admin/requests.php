@@ -1,4 +1,9 @@
 <?php
+/**
+ * Copyright (c) 2025 Oscar Periche, Metalinked
+ * Licensed under GPL v2 or later
+ * https://www.gnu.org/licenses/gpl-2.0.html
+ */
 
 if (!class_exists('WP_List_Table')) {
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');

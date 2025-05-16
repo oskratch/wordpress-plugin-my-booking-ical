@@ -1,15 +1,17 @@
 <?php
 /*
  * Plugin Name: My Booking iCal Form
- * Plugin URI: https://metalinked.net/
+ * Plugin URI: https://github.com/oskratch/wordpress-my-booking-ical
  * Description: A form that allows you to request apartment or room reservations through contact. A calendar is used to select a date range and connects to an iCal file to turn off reserved dates.
  * Author: Oscar Periche, Metalinked
  * Author URI: https://metalinked.net/
- * License: GPL v2 or later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Version: 1.1.0
  * Requires at least: 6.3
  * Requires PHP: 8
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * Copyright (c) 2025 Oscar Periche, Metalinked
  */
 
 defined('ABSPATH') or die("Action not allowed");
