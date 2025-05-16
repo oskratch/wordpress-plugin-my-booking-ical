@@ -67,20 +67,6 @@ This plugin synchronizes availability calendars from Booking.com and Airbnb usin
 2. Activate the plugin through the **Plugins** menu in WordPress.
 3. Navigate to the **My Booking iCal** panel in the WordPress back office to start adding your apartments and configure the booking forms.
 
----
-
-### ⚠️ Folder Name Reminder
-
-If you downloaded this plugin as a ZIP file from GitHub, the folder name might be something like: wordpress-my-booking-ical-form-main
-
-
-Before uploading it to your WordPress `plugins` directory, make sure to **rename the folder to**: my-booking-ical-form
-
-
-This ensures WordPress recognizes the plugin correctly, and avoids potential activation issues.
-
----
-
 ## Notes
 
 - This plugin is designed for manual booking validation. No payment gateway or automated booking confirmation is included.
