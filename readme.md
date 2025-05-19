@@ -12,6 +12,7 @@ This plugin synchronizes availability calendars from Booking.com and Airbnb usin
 - **Connect to Booking.com and Airbnb calendars** through iCal URLs.
 - **Display available dates** based on synchronized calendars.
 - **Set minimum booking days**, **general pricing**, **maximum capacity**, and **parking options** for each apartment.
+- **Add special prices for date ranges**: For each apartment, you can define as many special price ranges as needed (e.g., for high season, Easter, etc.), each with a start date, end date, and specific price.
 - **Collect reservation requests** through a customizable form.
 - **View and manage all received booking requests** per apartment from the WordPress dashboard.
 - **No direct online payment**: Admins validate requests manually (e.g., by phone) and manage booking status externally.
@@ -30,6 +31,7 @@ This plugin synchronizes availability calendars from Booking.com and Airbnb usin
    - General price (€)
    - Maximum capacity (number of people)
    - Parking availability (yes/no)
+   - Special prices between dates: Add as many date ranges as needed, each with a start date, end date, and special price.
 
 2. **Display Availability**:  
    The form will automatically check the iCal feeds to display available dates.
@@ -57,7 +59,7 @@ This plugin synchronizes availability calendars from Booking.com and Airbnb usin
 - **Total Nights**: 6  
 - **Total Price**: 1920 €
 
-> *Note: Each day is priced based on the general price defined for the apartment.*
+> *Note: Each day is priced based on the general price defined for the apartment, unless it falls within a special price range.*
 
 ---
 
