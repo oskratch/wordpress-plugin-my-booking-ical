@@ -1,85 +1,107 @@
 # My Booking iCal Form
 
-A custom WordPress plugin developed for property owners who manage apartments listed on external platforms like Booking.com and Airbnb, and want to allow users to **request reservations directly through their website**.
+![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg) ![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg) ![MySQL](https://img.shields.io/badge/MySQL-5.6%2B-orange.svg) ![License](https://img.shields.io/badge/License-GPL%20v2-green.svg)
 
-This plugin synchronizes availability calendars from Booking.com and Airbnb using **iCal URLs**, lets users submit reservation requests, and provides administrators with a simple way to review and manage those requests.
+A WordPress plugin designed for property owners who manage apartments on external platforms like Booking.com and Airbnb, enabling direct reservation requests through their website while synchronizing availability calendars via iCal URLs.
 
----
+## Overview
 
-## Features
+This plugin bridges the gap between external booking platforms and your WordPress website by:
+- Synchronizing availability from Booking.com and Airbnb calendars
+- Allowing visitors to submit reservation requests directly on your site
+- Providing administrators with tools to manage and review requests
+- Supporting flexible pricing strategies with special date ranges
 
-- **Create Booking Forms** for individual apartments.
-- **Connect to Booking.com and Airbnb calendars** through iCal URLs.
-- **Display available dates** based on synchronized calendars.
-- **Set minimum booking days**, **general pricing**, **maximum capacity**, and **parking options** for each apartment.
-- **Add special prices for date ranges**: For each apartment, you can define as many special price ranges as needed (e.g., for high season, Easter, etc.), each with a start date, end date, and specific price.
-- **Collect reservation requests** through a customizable form.
-- **View and manage all received booking requests** per apartment from the WordPress dashboard.
-- **No direct online payment**: Admins validate requests manually (e.g., by phone) and manage booking status externally.
+## Key Features
 
----
+### Apartment Management
+- Create individual booking forms for each apartment
+- Connect to multiple iCal feeds (Booking.com, Airbnb)
+- Set apartment-specific configurations:
+  - Minimum stay requirements
+  - Maximum guest capacity
+  - Parking availability
+  - Base pricing
 
-## How it Works
+### Dynamic Pricing
+- Define general pricing for each apartment
+- Add unlimited special price ranges (seasonal rates, holidays, etc.)
+- Automatic price calculation based on date selection
 
-1. **Add Apartments**:  
-   Create a booking form for each apartment by providing:
-   - Apartment name
-   - Reference
-   - Booking.com iCal URL (optional)
-   - Airbnb iCal URL (optional)
-   - Minimum days of stay
-   - General price (€)
-   - Maximum capacity (number of people)
-   - Parking availability (yes/no)
-   - Special prices between dates: Add as many date ranges as needed, each with a start date, end date, and special price.
+### Availability Synchronization
+- Real-time calendar sync from external platforms
+- Display only available dates to users
+- One-way synchronization (read-only from external sources)
 
-2. **Display Availability**:  
-   The form will automatically check the iCal feeds to display available dates.
+### Request Management
+- Collect detailed booking requests with guest information
+- Generate unique reference numbers for each request
+- Admin dashboard to view and manage all requests
+- Manual validation workflow (no automated bookings)
 
-3. **Users Submit Requests**:  
-   Site visitors select their check-in and check-out dates and fill out a simple form with their contact information.
+## How It Works
 
-4. **Administrators Receive and Manage Requests**:  
-   - Admins view received booking requests per apartment.
-   - Each request shows key information: reservation dates, client details, number of people, parking needs, and comments.
-   - Admins validate bookings manually (e.g., by phone) and then update external platforms like Booking.com or Airbnb accordingly.
+### 1. Setup Phase
+Configure apartments in the WordPress admin panel:
+- **Basic Info**: Name, reference code
+- **Calendar Integration**: Add iCal URLs from Booking.com/Airbnb
+- **Settings**: Minimum days, capacity, parking, base price
+- **Special Pricing**: Define date ranges with custom rates
 
----
+### 2. User Experience
+Visitors interact with your booking forms:
+- Select check-in and check-out dates from available calendar
+- View calculated pricing based on selected dates
+- Submit request with contact details and preferences
+- Receive confirmation with unique reference number
 
-## Example Request Details (Admin View)
+### 3. Admin Management
+Property owners review and process requests:
+- View all requests organized by apartment
+- Access complete booking details and guest information
+- Validate requests manually (phone call, email verification)
+- Update external platform calendars as needed
 
-- **Reference**: apt01-20250420-00001  
-- **Client Name**: John Doe  
-- **Check-in**: 20-04-2025  
-- **Check-out**: 26-04-2025  
-- **Email**: john.doe@example.com  
-- **Phone**: +123456789  
-- **Parking**: Yes  
-- **Guests**: 4  
-- **Total Nights**: 6  
-- **Total Price**: 1920 €
+## Example Booking Request
 
-> *Note: Each day is priced based on the general price defined for the apartment, unless it falls within a special price range.*
-
----
+```
+Reference: apt01-20250420-00001
+Client: John Doe
+Email: john.doe@example.com
+Phone: +123456789
+Check-in: April 20, 2025
+Check-out: April 26, 2025
+Guests: 4 people
+Parking: Required
+Total Nights: 6
+Total Price: €1,920
+```
 
 ## Installation
 
-1. Upload the plugin folder to your WordPress `/wp-content/plugins/` directory.
-2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Navigate to the **My Booking iCal** panel in the WordPress back office to start adding your apartments and configure the booking forms.
+1. **Upload**: Copy plugin files to `/wp-content/plugins/my-booking-ical-form/`
+2. **Activate**: Enable the plugin in WordPress admin under Plugins
+3. **Configure**: Access "My Booking iCal" in admin menu to set up apartments
 
-## Notes
+## Requirements
 
-- This plugin is designed for manual booking validation. No payment gateway or automated booking confirmation is included.
-- iCal synchronization is one-way: the plugin only **reads** availability from the external iCal feeds.
+- WordPress 5.0 or higher
+- PHP 7.4 or higher
+- MySQL 5.6 or higher
+- Active internet connection for iCal synchronization
 
----
+## Important Notes
+
+- **Manual Processing**: This plugin handles requests only - no automatic bookings or payments
+- **Read-Only Sync**: Calendar synchronization is one-way from external platforms
+- **Validation Required**: All bookings must be manually confirmed by administrators
+- **External Updates**: Confirmed bookings must be manually added to external platform calendars
 
 ## License
 
-This plugin is licensed under the GPLv2 or later. See [LICENSE](LICENSE) for details.
+This plugin is licensed under GPL v2 or later. See [LICENSE](LICENSE) for full details.
 
 ---
 
-**Developed by Oscar Periche. Contributions welcome!**
+**Developed by Oscar Periche**  
+Contributions and feedback welcome!
