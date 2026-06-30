@@ -1,0 +1,27 @@
+name: PHP Syntax Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  php-syntax:
+    runs-on: ubuntu-latest
+    name: PHP ${{ matrix.php }} syntax check
+    strategy:
+      matrix:
+        php: ["8.0", "8.1", "8.2", "8.3"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: none
+
+      - name: Check PHP syntax
+        run: find my-booking-ical-form -name "*.php" -print0 | xargs -0 -n1 php -l
