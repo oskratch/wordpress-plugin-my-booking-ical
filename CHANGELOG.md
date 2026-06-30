@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/oskratch/wordpress-plugin-my-booking-ical/compare/v1.0.0...v1.0.1) (2026-06-30)
+
+
+### Bug Fixes
+
+* esc_html on requests list title and clean up dead uninstall code ([0253780](https://github.com/oskratch/wordpress-plugin-my-booking-ical/commit/02537800d65dca44ba151ad9aa064f5d05aa6651))
+* security hardening, bug fixes and code quality improvements ([c207ceb](https://github.com/oskratch/wordpress-plugin-my-booking-ical/commit/c207cebd717466dce52759ff95bfd771872809a3))
+
 ## 1.0.0 (2025-05-30)
 
 
