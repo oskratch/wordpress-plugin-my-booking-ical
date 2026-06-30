@@ -2,6 +2,7 @@
   <h1><?php echo __('Add Form', 'my_booking_ical_form')?></h1>
   <p><?php echo __('Below, you can create a form to receive reservation requests. Please note that a separate form needs to be created for each apartment.', 'my_booking_ical_form')?></p>
   <form method="post" action="">
+    <?php wp_nonce_field('mbif_create_form', 'mbif_nonce'); ?>
     <table class="form-table">
         <tr valign="top">
             <th scope="row"><?php echo __('Apartment name', 'my_booking_ical_form')?></th>
@@ -13,12 +14,13 @@
             <th scope="row"><?php echo __('Reference', 'my_booking_ical_form')?></th>
             <td>
                 <input type="text" id="reference" name="reference" autocomplete="off" class="regular-text ltr" value="" required />
+                <p class="description"><?php echo __('Short code for the apartment (e.g. apt01). Used to generate request references.', 'my_booking_ical_form')?></p>
             </td>
         </tr>
         <tr valign="top">
             <th scope="row">Booking iCal URL</th>
             <td>
-                <input type="text" id="ical_booking_url" name="ical_booking_url" autocomplete="off" class="regular-text ltr" value="" />
+                <input type="url" id="ical_booking_url" name="ical_booking_url" autocomplete="off" class="regular-text ltr" value="" />
                 <p class="description">
                     <?php echo __('Leave blank if not applicable', 'my_booking_ical_form')?>
                 </p>
@@ -27,7 +29,7 @@
         <tr valign="top">
             <th scope="row">Airbnb iCal URL</th>
             <td>
-                <input type="text" id="ical_airbnb_url" name="ical_airbnb_url" autocomplete="off" class="regular-text ltr" value="" />
+                <input type="url" id="ical_airbnb_url" name="ical_airbnb_url" autocomplete="off" class="regular-text ltr" value="" />
                 <p class="description">
                     <?php echo __('Leave blank if not applicable', 'my_booking_ical_form')?>
                 </p>
@@ -40,15 +42,15 @@
             </td>
         </tr>
         <tr valign="top">
-            <th scope="row"><?php echo __('General price', 'my_booking_ical_form')?> (<?php echo get_option('currency');?>)</th>
+            <th scope="row"><?php echo __('General price', 'my_booking_ical_form')?> (<?php echo esc_html(get_option('currency'));?>)</th>
             <td>
-            <input type="number" id="price" name="price" step="0.01" class="regular-text ltr" value="" required />
+                <input type="number" id="price" name="price" step="0.01" min="0" class="regular-text ltr" value="" required />
             </td>
         </tr>
         <tr valign="top">
             <th scope="row"><?php echo __('Maximum capacity', 'my_booking_ical_form')?></th>
             <td>
-                <input type="number" id="max_capacity" name="max_capacity" min="1" value="1" class="regular-text ltr" value="" required />
+                <input type="number" id="max_capacity" name="max_capacity" min="1" value="1" class="regular-text ltr" required />
             </td>
         </tr>
         <tr valign="top">
@@ -62,10 +64,7 @@
                 </fieldset>
             </td>
         </tr>
-        <tr valign="top">
-            <td><input type="submit" name="submit_create_form" class="button button-primary" value="Guardar" /></td>
-            <td></td>
-        </tr>
     </table>
+    <?php submit_button(__('Save', 'my_booking_ical_form')); ?>
   </form>
 </div>

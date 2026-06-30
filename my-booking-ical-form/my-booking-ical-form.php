@@ -17,8 +17,6 @@
 defined('ABSPATH') or die("Action not allowed");
 define('MBIF_DIR', plugin_dir_path(__FILE__));
 
-// Define Options
-
 function mbif_Options(){
     return array(
         'mbif_emailto_enable' => 0,
@@ -30,16 +28,10 @@ function mbif_Options(){
     );
 }
 
-/*
-** Enable action plugin
-*/
-
 function mbif_plugin_enable() {
 
-    // Database: Creating tables
-
     global $wpdb;
-    
+
     include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
     $table_name_1 = $wpdb->prefix . "my_booking_ical_forms";
@@ -57,7 +49,7 @@ function mbif_plugin_enable() {
     $sql_1 .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
     dbDelta($sql_1);
-    
+
     $table_name_2 = $wpdb->prefix . "my_booking_ical_requests";
 
     $sql_2 = "CREATE TABLE `" . $table_name_2 . "` (";
@@ -78,7 +70,7 @@ function mbif_plugin_enable() {
     $sql_2 .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
     dbDelta($sql_2);
-    
+
     $table_name_3 = $wpdb->prefix . "my_booking_ical_prices";
 
     $sql_3 = "CREATE TABLE `" . $table_name_3 . "` (";
@@ -91,8 +83,6 @@ function mbif_plugin_enable() {
 
     dbDelta($sql_3);
 
-    // Options: Adding
-
     foreach(mbif_Options() as $key => $value){
         add_option($key, $value);
     }
@@ -100,39 +90,23 @@ function mbif_plugin_enable() {
 
 register_activation_hook(__FILE__, 'mbif_plugin_enable');
 
-/*
-** Disable action plugin
-*/
+function mbif_plugin_disable() {}
 
-function mbif_plugin_disable() {} 
-
-register_deactivation_hook(__FILE__, 'mbif_plugin_disable'); 
+register_deactivation_hook(__FILE__, 'mbif_plugin_disable');
 
 require_once MBIF_DIR . '/functions.php';
-
-/*
-** Delete action plugin
-*/
 
 function mbif_plugin_uninstall() {
 
-    // Database: Deleting tables
-
     global $wpdb;
 
-    $table_name_1 = $wpdb->prefix . "my_booking_ical_forms";
-    $table_name_2 = $wpdb->prefix . "my_booking_ical_requests";
-    
-    $wpdb->query( "DROP TABLE IF EXISTS $table_name_1" );
-    $wpdb->query( "DROP TABLE IF EXISTS $table_name_2" );
-
-    // Options: Delete
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "my_booking_ical_forms");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "my_booking_ical_requests");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "my_booking_ical_prices");
 
     foreach(mbif_Options() as $key => $value){
-        delete_option($key, $value);
+        delete_option($key);
     }
-} 
+}
 
-register_uninstall_hook(__FILE__, 'mbif_plugin_uninstall'); 
-
-require_once MBIF_DIR . '/functions.php';
+register_uninstall_hook(__FILE__, 'mbif_plugin_uninstall');

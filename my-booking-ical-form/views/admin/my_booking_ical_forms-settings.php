@@ -1,6 +1,7 @@
 <div class="wrap">
   <h1><?php echo __('My Booking iCal Forms Settings', 'my_booking_ical_form')?></h1>
   <form method="post" action="">
+    <?php wp_nonce_field('mbif_settings', 'mbif_nonce'); ?>
     <table class="form-table">
         <tr valign="top">
           <th scope="row"><?php echo __('Send an email notifying of a new request', 'my_booking_ical_form')?></th>
@@ -21,7 +22,7 @@
           <th scope="row"><?php echo __('Secondary email where to send received requests (optional)', 'my_booking_ical_form')?></th>
           <td><input type="email" name="mbif_emailto_secondary" class="regular-text ltr" value="<?php echo esc_attr( get_option('mbif_emailto_secondary') ); ?>" /></td>
         </tr>
-    </table>   
+    </table>
     <h2 class="title"><?php echo __('Forms', 'my_booking_ical_form')?></h2>
     <p><?php echo __('Below, you can make adjustments related to the reservation request form that will be visible to the user on the website.', 'my_booking_ical_form')?></p>
     <table class="form-table">
@@ -55,9 +56,9 @@
               <option<?php echo get_option('currency') == '€' ? " selected='selected'" : ""; ?> value='€'>Euro €</option>
               <option<?php echo get_option('currency') == '$' ? " selected='selected'" : ""; ?> value='$'>Dollar $</option>
             </select>
-          </td>   
+          </td>
         </tr>
-    </table>   
+    </table>
     <input type="hidden" name="settings" value="1">
     <?php submit_button(); ?>
   </form>

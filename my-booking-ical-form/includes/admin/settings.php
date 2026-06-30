@@ -8,20 +8,22 @@
 function my_booking_ical_settings() {
 
     global $wpdb;
-    
-    if(isset($_POST['settings'])) {
 
-        update_option('mbif_emailto_enable', $_POST['mbif_emailto_enable']);
-        update_option('mbif_emailto', $_POST['mbif_emailto']);
-        update_option('mbif_emailto_secondary', $_POST['mbif_emailto_secondary']);
-        update_option('mbif_label_shown', $_POST['mbif_label_shown']);
-        update_option('min_days_default', $_POST['min_days_default']);
-        update_option('currency', $_POST['currency']);
+    if (isset($_POST['settings'])) {
 
-        echo '<script>window.location.href = "' . admin_url('admin.php?page=my_booking_ical_settings') . '"</script>';
+        check_admin_referer('mbif_settings', 'mbif_nonce');
+
+        update_option('mbif_emailto_enable', intval($_POST['mbif_emailto_enable']));
+        update_option('mbif_emailto', sanitize_email($_POST['mbif_emailto']));
+        update_option('mbif_emailto_secondary', sanitize_email($_POST['mbif_emailto_secondary']));
+        update_option('mbif_label_shown', intval($_POST['mbif_label_shown']));
+        update_option('min_days_default', intval($_POST['min_days_default']));
+        update_option('currency', sanitize_text_field($_POST['currency']));
+
+        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_settings')) . '"</script>';
         exit;
 
-    }else{
+    } else {
         require(MBIF_DIR . '/views/admin/my_booking_ical_forms-settings.php');
     }
 }

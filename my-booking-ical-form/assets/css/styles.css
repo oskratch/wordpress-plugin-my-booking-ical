@@ -176,7 +176,6 @@ form.booking_ical_form #sendForm {
     font-family: Barlow !important;  
     background-color: #FFF !important;
     color: #303133 !important;
-    background-color: #ffffff !important;
     border-color: #ffffff !important;
     border-width: 1px;
     border-radius: 2px;
@@ -195,11 +194,10 @@ form.booking_ical_form #sendForm {
     white-space: pre-wrap;
     -webkit-text-stroke: 0px;
     line-height: normal;
-    transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86v), border-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), border-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
 form.booking_ical_form #sendForm:hover {
