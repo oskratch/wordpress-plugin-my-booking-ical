@@ -59,258 +59,51 @@ function my_booking_ical_shortcode($atts) {
     global $wpdb;
 
     $form_id = isset($atts['form_id']) ? intval($atts['form_id']) : 0;
-    $item = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . $wpdb->prefix . "my_booking_ical_forms WHERE id = %d", $form_id));
+    $item = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_forms WHERE id = %d",
+        $form_id
+    ));
 
-    if (isset($item)) {
+    if (!$item) return '';
 
-        enqueue_resources();
+    enqueue_resources();
 
-        $form_html = "";
+    $price_ranges = $wpdb->get_results($wpdb->prepare(
+        "SELECT from_date, to_date, price FROM {$wpdb->prefix}my_booking_ical_prices WHERE form_id = %d",
+        $form_id
+    ));
 
-        $form_sent = isset($_GET['form_sent']) ? intval($_GET['form_sent']) : null;
+    $form_config = array(
+        'formId'         => $form_id,
+        'minDays'        => intval($item->min_days),
+        'basePrice'      => floatval($item->price),
+        'currency'       => get_option('currency'),
+        'priceRanges'    => array_map(function($r) {
+            return ['start' => $r->from_date, 'end' => $r->to_date, 'price' => floatval($r->price)];
+        }, $price_ranges),
+        'icalBookingUrl' => $item->ical_booking_url,
+        'icalAirbnbUrl'  => $item->ical_airbnb_url,
+        'i18n'           => array(
+            'nightName'   => __('Night', 'my_booking_ical_form'),
+            'nightsName'  => __('Nights', 'my_booking_ical_form'),
+            'totalPrice'  => __('Total price', 'my_booking_ical_form'),
+            'selectDates' => __('Please select check-in and check-out dates.', 'my_booking_ical_form'),
+            'minStay'     => __('The minimum stay for this apartment is %d days.', 'my_booking_ical_form'),
+        ),
+    );
 
-        if ($form_sent == 1) {
+    wp_add_inline_script(
+        'mbif-js',
+        'window.mbifForms = window.mbifForms || {}; window.mbifForms[' . $form_id . '] = ' . wp_json_encode($form_config) . ';',
+        'before'
+    );
 
-            $form_html .= '<div id="my-popup" class="my-popup">
-                <div class="my-popup-content">
-                    <span class="my-popup-close">&times;</span>
-                    <h3>' . __('Request sent', 'my_booking_ical_form') . '</h3>
-                    <p>' . __('We have sent an email to the provided address with the summary of your booking request details. You will receive the confirmation within 24 hours.', 'my_booking_ical_form') . '</p>
-                </div>
-            </div>';
+    $form_sent       = isset($_GET['form_sent']) ? intval($_GET['form_sent']) : 0;
+    $form_action_url = esc_url($_SERVER['REQUEST_URI']);
 
-        }
-
-        $consulta = $wpdb->prepare(
-            "SELECT from_date, to_date, price FROM {$wpdb->prefix}my_booking_ical_prices WHERE form_id = %d",
-            $form_id
-        );
-
-        $resultados = $wpdb->get_results($consulta);
-        $datos_precios_reserva = array();
-
-        foreach ($resultados as $resultado) {
-            $datos_precios_reserva[] = array(
-                'start' => $resultado->from_date,
-                'end' => $resultado->to_date,
-                'price' => $resultado->price
-            );
-        }
-
-        $json_precios_reserva = json_encode($datos_precios_reserva);
-
-        $form_action_url = esc_url($_SERVER['REQUEST_URI']);
-
-        $form_html .= '<form method="post" id="requestForm" class="booking_ical_form" action="' . $form_action_url . '">';
-        $form_html .= '<input type="hidden" name="action" value="my_booking_ical_send">';
-        $form_html .= '<input type="hidden" name="form_id" value="' . esc_attr($atts['form_id']) . '">';
-        $form_html .= '<div class="form-group">';
-
-        $form_html .= '<div class="calendar-col">';
-        $form_html .= '<label for="d_entry_date">' . __('Entry date', 'my_booking_ical_form') . '</label>';
-        $form_html .= '<div id="d_entry_date"></div>';
-        $form_html .= '<input type="text" id="entry_date" name="entry_date" readonly required>';
-        $form_html .= '</div>';
-
-        $form_html .= '<div class="calendar-col">';
-        $form_html .= '<label for="d_departure_date">' . __('Last night', 'my_booking_ical_form') . '*</label>';
-        $form_html .= '<div id="d_departure_date"></div>';
-        $form_html .= '<input type="text" id="departure_date" name="departure_date" readonly required>';
-        $form_html .= '<div class="info-additional">* ' . __('Departure date is the next day before 11am.', 'my_booking_ical_form') . "</div>";
-        $form_html .= '</div>';
-
-        $form_html .= '</div>';
-
-        $form_html .= '<div id="priceContainer"></div>';
-
-        $form_html .= '<div id="errorDates"></div>';
-
-        $form_html .= '<div class="form-group">';
-
-        if (get_option('mbif_label_shown')) {
-            $form_html .= '<label for="first_name">' . __('First Name', 'my_booking_ical_form') . '</label>';
-            $form_html .= '<input type="text" id="first_name" name="first_name" required>';
-        } else {
-            $form_html .= '<input type="text" id="first_name" name="first_name" placeholder="' . __('First Name', 'my_booking_ical_form') . '" required>';
-        }
-
-        $form_html .= '</div>';
-        $form_html .= '<div class="form-group">';
-
-        if (get_option('mbif_label_shown')) {
-            $form_html .= '<label for="last_name">' . __('Last Name', 'my_booking_ical_form') . '</label>';
-            $form_html .= '<input type="text" id="last_name" name="last_name" required>';
-        } else {
-            $form_html .= '<input type="text" id="last_name" name="last_name" placeholder="' . __('Last Name', 'my_booking_ical_form') . '" required>';
-        }
-
-        $form_html .= '</div>';
-        $form_html .= '<div class="form-group">';
-
-        if (get_option('mbif_label_shown')) {
-            $form_html .= '<label for="email">' . __('Email', 'my_booking_ical_form') . '</label>';
-            $form_html .= '<input type="email" id="email" name="email" required>';
-        } else {
-            $form_html .= '<input type="email" id="email" name="email" placeholder="' . __('Email', 'my_booking_ical_form') . '" required>';
-        }
-
-        $form_html .= '</div>';
-        $form_html .= '<div class="form-group">';
-
-        if (get_option('mbif_label_shown')) {
-            $form_html .= '<label for="phone">' . __('Phone', 'my_booking_ical_form') . '</label>';
-            $form_html .= '<input type="text" id="phone" name="phone">';
-        } else {
-            $form_html .= '<input type="text" id="phone" name="phone" placeholder="' . __('Phone', 'my_booking_ical_form') . '">';
-        }
-
-        $form_html .= '</div>';
-        $form_html .= '<div class="form-group">';
-
-        if (get_option('mbif_label_shown')) {
-            $form_html .= '<label for="guest_count">' . __('Select the number of people', 'my_booking_ical_form') . '</label>';
-            $form_html .= '<select name="guest_count" required>';
-            for ($a = 1; $a <= $item->max_capacity; $a++) {
-                $form_html .= '<option value="' . $a . '">' . $a . '</option>';
-            }
-            $form_html .= '</select>';
-        } else {
-            $form_html .= '<select name="guest_count" required>';
-            $form_html .= '<option value="">' . __('Select the number of people', 'my_booking_ical_form') . '</option>';
-            for ($a = 1; $a <= $item->max_capacity; $a++) {
-                $form_html .= '<option value="' . $a . '">' . $a . '</option>';
-            }
-            $form_html .= '</select>';
-        }
-
-        $form_html .= '</div>';
-        $form_html .= '<div class="form-group">';
-
-        if ($item->parking_option) {
-
-            $form_html .= '<label for="parking">';
-            $form_html .= __('Parking', 'my_booking_ical_form');
-            $form_html .= '</label>';
-            $form_html .= '<input type="radio" name="parking" value="0"> ' . __('No', 'my_booking_ical_form');
-            $form_html .= '<input type="radio" name="parking" value="1"> ' . __('Yes', 'my_booking_ical_form');
-
-            $form_html .= '</div>';
-            $form_html .= '<div class="form-group">';
-
-        }
-
-        if (get_option('mbif_label_shown')) {
-            $form_html .= '<label for="comments">' . __('Comments', 'my_booking_ical_form') . '</label>';
-            $form_html .= '<textarea id="comments" name="comments"></textarea>';
-        } else {
-            $form_html .= '<textarea id="comments" name="comments" placeholder="' . __('Comments', 'my_booking_ical_form') . '"></textarea>';
-        }
-
-        $form_html .= '</div>';
-        $form_html .= '<div class="form-group">';
-
-        $form_html .= '<input type="checkbox" name="acceptance" required> ';
-        $form_html .= '<span>' . sprintf(__('I have read and accept the %s', 'my_booking_ical_form'), '<a target="_blank" class="accept-link" href="' . get_privacy_policy_url() . '">' . __('Privacy Policy', 'my_booking_ical_form') . '</a>') . '</span>';
-
-        $form_html .= '</div>';
-        $form_html .= '<div class="form-group">';
-        $form_html .= '<input type="hidden" id="summary" name="summary">';
-        $form_html .= '<button type="button" id="sendForm" class="btn btn-primary">' . __('Send', 'my_booking_ical_form') . '</button>';
-        $form_html .= '</div>';
-        $form_html .= '</form>';
-
-        $form_html .= "<script>
-        let min_days = " . intval($item->min_days) . ",
-            currency = '" . esc_js(get_option('currency')) . "',
-            dayName = '" . esc_js(__('Day', 'my_booking_ical_form')) . "',
-            nightsName = '" . esc_js(__('Night', 'my_booking_ical_form')) . "',
-            priceName = '" . esc_js(__('Price', 'my_booking_ical_form')) . "',
-            daysName = '" . esc_js(__('Nights', 'my_booking_ical_form')) . "',
-            totalPriceName = '" . esc_js(__('Total price', 'my_booking_ical_form')) . "';
-
-        var priceRangesJson = '" . esc_js($json_precios_reserva) . "';
-        var url1 = '" . esc_js($item->ical_booking_url) . "';
-        var url2 = '" . esc_js($item->ical_airbnb_url) . "';
-
-        document.addEventListener('DOMContentLoaded', function() {";
-
-        if ($item->ical_booking_url != "" && $item->ical_airbnb_url == "") {
-
-            $form_html .= "async function main() {
-                try { await fetchData(url1, true); } catch(e) { console.error(e); }
-            }
-            main();";
-
-        } elseif ($item->ical_booking_url == "" && $item->ical_airbnb_url != "") {
-
-            $form_html .= "async function main() {
-                try { await fetchData(url2, true); } catch(e) { console.error(e); }
-            }
-            main();";
-
-        } elseif ($item->ical_booking_url != "" && $item->ical_airbnb_url != "") {
-
-            $form_html .= "async function main1() {
-                try { await fetchData(url1, false); } catch(e) { console.error(e); }
-            }
-            async function main2() {
-                try { await fetchData(url2, true); } catch(e) { console.error(e); }
-            }
-            main1();
-            main2();";
-
-        } else {
-
-            $form_html .= "iniCalendar();";
-
-        }
-
-        $form_html .= "});";
-
-        $form_html .= "function iniCalendar() {
-            let today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-            jQuery('#d_entry_date').datepicker({
-                dateFormat: 'dd-mm-yy',
-                minDate: today,
-                altField: '#entry_date',
-                firstDay: 1,
-                beforeShowDay: function(date) {
-                    var stringDate = jQuery.datepicker.formatDate('yymmdd', date);
-                    if (disabledDates.indexOf(stringDate) === -1) {
-                        return [true, '', getPriceForDate(date, priceRangesJson, " . floatval($item->price) . ") + ' " . esc_js(get_option('currency')) . "'];
-                    } else {
-                        return [false];
-                    }
-                },
-                onSelect: function(date) {
-                    jQuery('#d_departure_date').datepicker('option', 'minDate', addOneDay(date));
-                    jQuery('#entry_date').val(date);
-                    getPriceForDateRange(date, jQuery('#departure_date').val(), priceRangesJson, " . floatval($item->price) . ");
-                }
-            });
-
-            jQuery('#d_departure_date').datepicker({
-                dateFormat: 'dd-mm-yy',
-                minDate: today,
-                firstDay: 1,
-                beforeShowDay: function(date) {
-                    var stringDate = jQuery.datepicker.formatDate('yymmdd', date);
-                    if (disabledDates.indexOf(stringDate) === -1) {
-                        return [true, '', getPriceForDate(date, priceRangesJson, " . floatval($item->price) . ") + ' " . esc_js(get_option('currency')) . "'];
-                    } else {
-                        return [false];
-                    }
-                },
-                onSelect: function(date) {
-                    jQuery('#departure_date').val(date);
-                    getPriceForDateRange(jQuery('#entry_date').val(), date, priceRangesJson, " . floatval($item->price) . ");
-                }
-            });
-        }</script>";
-
-        return $form_html;
-
-    }
+    ob_start();
+    require MBIF_DIR . 'views/public/booking-form.php';
+    return ob_get_clean();
 }
 
 add_action('init', 'my_booking_ical_send');

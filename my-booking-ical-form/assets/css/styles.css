@@ -87,14 +87,14 @@ form.booking_ical_form .calendar-col:first-child {
     margin-right: 15px;
 }
 
-form.booking_ical_form #d_entry_date,
-form.booking_ical_form #d_departure_date {
+form.booking_ical_form .mbif-entry-cal,
+form.booking_ical_form .mbif-departure-cal {
     margin-bottom: 10px;
     margin-top: 10px;
 }
 
-form.booking_ical_form #entry_date,
-form.booking_ical_form #departure_date {
+form.booking_ical_form .mbif-entry-date,
+form.booking_ical_form .mbif-departure-date {
     display: none !important;
 }
 
@@ -117,20 +117,20 @@ form.booking_ical_form label {
     display: block;
 }
 
-#errorDates {
+.mbif-error-dates {
     color: #94484b;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 20px;
 }
 
-#priceContainer ul.priceList {
+.mbif-price-container ul.priceList {
     list-style: none;
     margin-bottom: 10px;
     padding: 0;
 }
 
-#priceContainer div {
+.mbif-price-container div {
     font-weight: 600;
 }
 
@@ -171,7 +171,7 @@ form.booking_ical_form .form-group a.accept-link:hover {
     background-size: 14px 10px;
 }
 
-form.booking_ical_form #sendForm {
+form.booking_ical_form .mbif-send-btn {
     font-weight: 600 !important;
     font-family: Barlow !important;  
     background-color: #FFF !important;
@@ -200,7 +200,7 @@ form.booking_ical_form #sendForm {
     transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), border-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
-form.booking_ical_form #sendForm:hover {
+form.booking_ical_form .mbif-send-btn:hover {
     color: #ffffff !important;
     background-color: transparent !important;
     border-color: #ffffff !important;
