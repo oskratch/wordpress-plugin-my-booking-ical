@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/oskratch/wordpress-plugin-my-booking-ical/compare/v1.0.1...v1.0.2) (2026-06-30)
+
+
+### Miscellaneous Chores
+
+* add GitHub collaboration infrastructure ([d04f583](https://github.com/oskratch/wordpress-plugin-my-booking-ical/commit/d04f5832f3f6223950a4587014717a4351b94f1a))
+
 ## [1.0.1](https://github.com/oskratch/wordpress-plugin-my-booking-ical/compare/v1.0.0...v1.0.1) (2026-06-30)
 
 
