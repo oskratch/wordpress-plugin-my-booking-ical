@@ -135,7 +135,7 @@ function my_booking_ical_prices_create() {
         exit;
 
     } else {
-        require(MBIF_DIR . '/views/admin/my_booking_ical_prices-create.php');
+        require(MBIF_DIR . '/views/admin/prices-create.php');
     }
 }
 
@@ -170,7 +170,7 @@ function my_booking_ical_prices_edit() {
             "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_prices WHERE id = %d",
             intval($_GET['id'])
         ));
-        require(MBIF_DIR . '/views/admin/my_booking_ical_prices-edit.php');
+        require(MBIF_DIR . '/views/admin/prices-edit.php');
     }
 }
 

@@ -24,6 +24,6 @@ function my_booking_ical_settings() {
         exit;
 
     } else {
-        require(MBIF_DIR . '/views/admin/my_booking_ical_forms-settings.php');
+        require(MBIF_DIR . '/views/admin/settings.php');
     }
 }

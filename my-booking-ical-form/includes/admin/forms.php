@@ -140,7 +140,7 @@ class My_Booking_Ical_Forms extends WP_List_Table {
 function my_booking_ical_forms() {
     $table = new My_Booking_Ical_Forms();
     $table->prepare_items();
-    require(MBIF_DIR . '/views/admin/my_booking_ical_forms.php');
+    require(MBIF_DIR . '/views/admin/forms-list.php');
 }
 
 function my_booking_ical_forms_create() {
@@ -176,7 +176,7 @@ function my_booking_ical_forms_create() {
         echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_forms')) . '"</script>';
         exit;
     } else {
-        require(MBIF_DIR . '/views/admin/my_booking_ical_forms-create.php');
+        require(MBIF_DIR . '/views/admin/forms-create.php');
     }
 }
 
@@ -221,7 +221,7 @@ function my_booking_ical_forms_edit() {
         ));
         $table = new My_Booking_Ical_Prices();
         $table->prepare_items();
-        require(MBIF_DIR . '/views/admin/my_booking_ical_forms-edit.php');
+        require(MBIF_DIR . '/views/admin/forms-edit.php');
     }
 }
 

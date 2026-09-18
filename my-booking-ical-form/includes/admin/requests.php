@@ -154,7 +154,7 @@ function my_booking_ical_requests() {
     $table = new My_Booking_Ical_Requests($item);
     $table->prepare_items();
 
-    require(MBIF_DIR . '/views/admin/my_booking_ical_requests.php');
+    require(MBIF_DIR . '/views/admin/requests-list.php');
 }
 
 function my_booking_ical_requests_show() {
@@ -190,7 +190,7 @@ function my_booking_ical_requests_show() {
         $table = new My_Booking_Ical_Requests($form);
         $table->prepare_items();
 
-        require(MBIF_DIR . '/views/admin/my_booking_ical_requests_show.php');
+        require(MBIF_DIR . '/views/admin/requests-show.php');
     }
 }
 
