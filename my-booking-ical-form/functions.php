@@ -33,19 +33,19 @@ add_action( 'plugins_loaded', 'load_mbif_translations' );
 add_action('admin_enqueue_scripts', 'my_enqueue_assets_admin');
 
 function my_enqueue_assets_admin() {
-    wp_enqueue_script('mbif-js-admin', plugins_url('assets/admin/js/mbif.js', __FILE__));
-    wp_enqueue_style('mbif-css-admin', plugins_url('assets/admin/css/styles.css', __FILE__));
+    wp_enqueue_script('mbif-js-admin', plugins_url('assets/admin/js/mbif.js', __FILE__), array(), MBIF_VERSION);
+    wp_enqueue_style('mbif-css-admin', plugins_url('assets/admin/css/styles.css', __FILE__), array(), MBIF_VERSION);
 }
 
 function enqueue_resources() {
-    wp_register_style('jquery-ui-datepicker-css', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
+    wp_register_style('jquery-ui-datepicker-css', plugins_url('assets/libs/jquery-ui/jquery-ui.min.css', __FILE__), array(), '1.12.1');
     wp_enqueue_style('jquery-ui-datepicker-css');
-    wp_register_style('mbif-css', plugins_url('assets/css/styles.css', __FILE__));
+    wp_register_style('mbif-css', plugins_url('assets/css/styles.css', __FILE__), array(), MBIF_VERSION);
     wp_enqueue_style('mbif-css');
     wp_enqueue_script('jquery-ui-datepicker');
-    wp_register_script('jquery-ui-datepicker-languages', plugins_url('assets/libs/jquery-ui/i18n/datepicker-' . substr(get_locale(), 0, 2) . '.js', __FILE__));
+    wp_register_script('jquery-ui-datepicker-languages', plugins_url('assets/libs/jquery-ui/i18n/datepicker-' . substr(get_locale(), 0, 2) . '.js', __FILE__), array('jquery-ui-datepicker'), MBIF_VERSION);
     wp_enqueue_script('jquery-ui-datepicker-languages');
-    wp_register_script('mbif-js', plugins_url('assets/js/mbif.js', __FILE__), array('jquery'), null, true);
+    wp_register_script('mbif-js', plugins_url('assets/js/mbif.js', __FILE__), array('jquery'), MBIF_VERSION, true);
     wp_enqueue_script('mbif-js');
     wp_localize_script('mbif-js', 'mbifSettings', array(
         'proxyUrl' => plugins_url('ical_proxy.php', __FILE__),
