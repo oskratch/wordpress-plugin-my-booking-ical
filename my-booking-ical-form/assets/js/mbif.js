@@ -51,8 +51,11 @@ function initBookingForm(wrapEl, config) {
 
     async function loadCalendars() {
         try {
-            const urls = [config.icalBookingUrl, config.icalAirbnbUrl].filter(Boolean);
-            await Promise.all(urls.map(url => fetchIcal(url, disabledDates)));
+            const types = [
+                config.hasBookingIcal ? 'booking' : null,
+                config.hasAirbnbIcal ? 'airbnb' : null,
+            ].filter(Boolean);
+            await Promise.all(types.map(type => fetchIcal(config.formId, type, disabledDates)));
         } catch (e) {
             console.error('iCal fetch error:', e);
         }
@@ -128,10 +131,10 @@ function initBookingForm(wrapEl, config) {
     loadCalendars();
 }
 
-async function fetchIcal(url, disabledDates) {
-    const proxyUrl = mbifSettings.proxyUrl + '?ical_url=' + encodeURIComponent(url);
+async function fetchIcal(formId, type, disabledDates) {
+    const proxyUrl = mbifSettings.proxyUrl + '?form_id=' + encodeURIComponent(formId) + '&type=' + encodeURIComponent(type);
     const response = await fetch(proxyUrl);
-    if (!response.ok) throw new Error('Failed to fetch calendar: ' + url);
+    if (!response.ok) throw new Error('Failed to fetch calendar: ' + type);
     const text = await response.text();
 
     const lines = text.split('\n');

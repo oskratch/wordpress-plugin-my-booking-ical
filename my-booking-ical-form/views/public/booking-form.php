@@ -13,8 +13,12 @@
 <?php endif; ?>
 
 <form method="post" class="booking_ical_form" action="<?php echo $form_action_url; ?>">
+    <?php wp_nonce_field('mbif_send_request', 'mbif_nonce'); ?>
     <input type="hidden" name="action" value="my_booking_ical_send">
     <input type="hidden" name="form_id" value="<?php echo $form_id; ?>">
+    <p class="mbif-hp-field" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;">
+        <label>Website<input type="text" name="mbif_website" tabindex="-1" autocomplete="off"></label>
+    </p>
 
     <div class="form-group">
         <div class="calendar-col">

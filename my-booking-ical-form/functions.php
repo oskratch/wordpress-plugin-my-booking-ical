@@ -17,9 +17,9 @@ function register_my_booking_ical_form_menu() {
     add_submenu_page(null, 'Requests', 'Requests', 'manage_options', 'my_booking_ical_requests_show', 'my_booking_ical_requests_show');
     add_submenu_page(null, 'Requests', 'Requests', 'manage_options', 'my_booking_ical_requests_validate', 'my_booking_ical_requests_validate');
     add_submenu_page(null, 'Requests', 'Requests', 'manage_options', 'my_booking_ical_requests_delete', 'my_booking_ical_requests_delete');
-    add_submenu_page(null, 'Requests', 'Requests', 'manage_options', 'my_booking_ical_prices_create', 'my_booking_ical_prices_create');
-    add_submenu_page(null, 'Requests', 'Requests', 'manage_options', 'my_booking_ical_prices_edit', 'my_booking_ical_prices_edit');
-    add_submenu_page(null, 'Requests', 'Requests', 'manage_options', 'my_booking_ical_prices_delete', 'my_booking_ical_prices_delete');
+    add_submenu_page(null, 'Prices', 'Prices', 'manage_options', 'my_booking_ical_prices_create', 'my_booking_ical_prices_create');
+    add_submenu_page(null, 'Prices', 'Prices', 'manage_options', 'my_booking_ical_prices_edit', 'my_booking_ical_prices_edit');
+    add_submenu_page(null, 'Prices', 'Prices', 'manage_options', 'my_booking_ical_prices_delete', 'my_booking_ical_prices_delete');
 }
 
 add_action( 'admin_menu', 'register_my_booking_ical_form_menu' );
@@ -81,8 +81,8 @@ function my_booking_ical_shortcode($atts) {
         'priceRanges'    => array_map(function($r) {
             return ['start' => $r->from_date, 'end' => $r->to_date, 'price' => floatval($r->price)];
         }, $price_ranges),
-        'icalBookingUrl' => $item->ical_booking_url,
-        'icalAirbnbUrl'  => $item->ical_airbnb_url,
+        'hasBookingIcal' => !empty($item->ical_booking_url),
+        'hasAirbnbIcal'  => !empty($item->ical_airbnb_url),
         'i18n'           => array(
             'nightName'   => __('Night', 'my_booking_ical_form'),
             'nightsName'  => __('Nights', 'my_booking_ical_form'),
@@ -108,9 +108,120 @@ function my_booking_ical_shortcode($atts) {
 
 add_action('init', 'my_booking_ical_send');
 
+/**
+ * Converts a 'd-m-Y' (or 'd/m/Y') string coming from the datepicker into a
+ * validated 'Y-m-d' string, or false if it isn't a real, parseable date.
+ */
+function mbif_parse_date_input($raw_date) {
+    $parts = preg_split('/[\/\-]/', trim((string) $raw_date));
+
+    if (count($parts) !== 3) return false;
+
+    list($day, $month, $year) = array_map('intval', $parts);
+
+    if (!checkdate($month, $day, $year)) return false;
+
+    return sprintf('%04d-%02d-%02d', $year, $month, $day);
+}
+
+/**
+ * Fetches an external iCal feed with SSRF hardening (scheme + private/reserved
+ * IP checks), a timeout, and a short transient cache shared with ical_proxy.php.
+ */
+function mbif_fetch_ical($ical_url) {
+    if (empty($ical_url)) return false;
+
+    $cache_key = 'mbif_ical_' . md5($ical_url);
+    $cached = get_transient($cache_key);
+    if ($cached !== false) return $cached;
+
+    $parsed = parse_url($ical_url);
+    if (!$parsed || empty($parsed['scheme']) || !in_array($parsed['scheme'], ['http', 'https'], true) || empty($parsed['host'])) {
+        return false;
+    }
+
+    $ip = gethostbyname($parsed['host']);
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+        return false;
+    }
+
+    $response = wp_remote_get($ical_url, array(
+        'timeout'     => 10,
+        'redirection' => 2,
+        'user-agent'  => 'MyBookingIcalForm/' . (defined('MBIF_VERSION') ? MBIF_VERSION : '1'),
+    ));
+
+    if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+        return false;
+    }
+
+    $body = wp_remote_retrieve_body($response);
+    set_transient($cache_key, $body, 15 * MINUTE_IN_SECONDS);
+
+    return $body;
+}
+
+/**
+ * Parses VEVENT DTSTART/DTEND pairs out of raw iCal text into ['Y-m-d','Y-m-d'] ranges.
+ */
+function mbif_parse_ical_ranges($ical_text) {
+    $ranges = array();
+    if (empty($ical_text)) return $ranges;
+
+    $entry = null;
+    $departure = null;
+
+    foreach (preg_split('/\r\n|\r|\n/', $ical_text) as $line) {
+        $line = trim($line);
+        if (stripos($line, 'DTSTART') === 0) {
+            $value = substr(strrchr($line, ':'), 1);
+            $entry = substr($value, 0, 8);
+        } elseif (stripos($line, 'DTEND') === 0) {
+            $value = substr(strrchr($line, ':'), 1);
+            $departure = substr($value, 0, 8);
+        } elseif ($line === 'END:VEVENT' && $entry && $departure) {
+            $start = DateTime::createFromFormat('Ymd', $entry);
+            $end = DateTime::createFromFormat('Ymd', $departure);
+            if ($start && $end) {
+                $ranges[] = array($start->format('Y-m-d'), $end->format('Y-m-d'));
+            }
+            $entry = null;
+            $departure = null;
+        }
+    }
+
+    return $ranges;
+}
+
+function mbif_range_overlaps($entry_date, $departure_date, $occupied_ranges) {
+    foreach ($occupied_ranges as $range) {
+        if ($entry_date < $range[1] && $departure_date > $range[0]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function my_booking_ical_send() {
 
     if (isset($_POST['action']) && $_POST['action'] == 'my_booking_ical_send') {
+
+        if (!isset($_POST['mbif_nonce']) || !wp_verify_nonce($_POST['mbif_nonce'], 'mbif_send_request')) {
+            wp_die(__('Security check failed. Please reload the page and try again.', 'my_booking_ical_form'));
+        }
+
+        // Honeypot: real visitors never fill this hidden field.
+        if (!empty($_POST['mbif_website'])) {
+            wp_redirect(add_query_arg('form_sent', 1, $_SERVER['HTTP_REFERER']));
+            exit;
+        }
+
+        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+        $throttle_key = 'mbif_throttle_' . md5($ip);
+        if ($ip && get_transient($throttle_key)) {
+            wp_die(__('You are submitting too fast. Please wait a moment and try again.', 'my_booking_ical_form'));
+        }
+        if ($ip) set_transient($throttle_key, 1, 20);
 
         global $wpdb;
 
@@ -119,22 +230,39 @@ function my_booking_ical_send() {
             intval($_POST['form_id'])
         ));
 
+        if (!$item) {
+            wp_die(__('Invalid booking form.', 'my_booking_ical_form'));
+        }
+
         $first_name = sanitize_text_field($_POST['first_name']);
         $last_name = sanitize_text_field($_POST['last_name']);
         $email = sanitize_email($_POST['email']);
         $phone = sanitize_text_field($_POST['phone']);
-        $entry_date = sanitize_text_field($_POST['entry_date']);
-        $departure_date = sanitize_text_field($_POST['departure_date']);
         $parking = isset($_POST['parking']) ? intval($_POST['parking']) : 0;
         $guest_count = intval($_POST['guest_count']);
         $comments = sanitize_text_field($_POST['comments']);
         $summary = wp_kses_post($_POST['summary']);
 
-        $entry_date = preg_split("/[\/]|[-]+/", $entry_date);
-        $entry_date = $entry_date[2] . "-" . $entry_date[1] . "-" . $entry_date[0];
+        $entry_date = mbif_parse_date_input($_POST['entry_date'] ?? '');
+        $departure_date = mbif_parse_date_input($_POST['departure_date'] ?? '');
 
-        $departure_date = preg_split("/[\/]|[-]+/", $departure_date);
-        $departure_date = $departure_date[2] . "-" . $departure_date[1] . "-" . $departure_date[0];
+        if (!$entry_date || !$departure_date || $departure_date <= $entry_date) {
+            wp_die(__('The selected dates are invalid.', 'my_booking_ical_form'));
+        }
+
+        $nights = (strtotime($departure_date) - strtotime($entry_date)) / DAY_IN_SECONDS;
+        if ($nights < intval($item->min_days)) {
+            wp_die(sprintf(__('The minimum stay for this apartment is %d days.', 'my_booking_ical_form'), intval($item->min_days)));
+        }
+
+        $occupied_ranges = array_merge(
+            mbif_parse_ical_ranges(mbif_fetch_ical($item->ical_booking_url)),
+            mbif_parse_ical_ranges(mbif_fetch_ical($item->ical_airbnb_url))
+        );
+
+        if (mbif_range_overlaps($entry_date, $departure_date, $occupied_ranges)) {
+            wp_die(__('The selected dates are no longer available. Please choose different dates.', 'my_booking_ical_form'));
+        }
 
         $result = $wpdb->insert(
             $wpdb->prefix . 'my_booking_ical_requests',

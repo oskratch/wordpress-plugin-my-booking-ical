@@ -16,6 +16,8 @@
 
 defined('ABSPATH') or die("Action not allowed");
 define('MBIF_DIR', plugin_dir_path(__FILE__));
+define('MBIF_VERSION', '1.1.0');
+define('MBIF_DB_VERSION', '1.2');
 
 function mbif_Options(){
     return array(
@@ -40,8 +42,8 @@ function mbif_plugin_enable() {
     $sql_1 .= "`id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,";
     $sql_1 .= "`reference` varchar(30) DEFAULT NULL,";
     $sql_1 .= "`title` varchar(100) NOT NULL,";
-    $sql_1 .= "`ical_booking_url` varchar(200) DEFAULT NULL,";
-    $sql_1 .= "`ical_airbnb_url` varchar(200) DEFAULT NULL,";
+    $sql_1 .= "`ical_booking_url` varchar(500) DEFAULT NULL,";
+    $sql_1 .= "`ical_airbnb_url` varchar(500) DEFAULT NULL,";
     $sql_1 .= "`min_days` int(3) NOT NULL,";
     $sql_1 .= "`price` decimal(5,2) NOT NULL,";
     $sql_1 .= "`max_capacity` int(2) NOT NULL,";
@@ -86,6 +88,8 @@ function mbif_plugin_enable() {
     foreach(mbif_Options() as $key => $value){
         add_option($key, $value);
     }
+
+    update_option('mbif_db_version', MBIF_DB_VERSION);
 }
 
 register_activation_hook(__FILE__, 'mbif_plugin_enable');
@@ -93,6 +97,17 @@ register_activation_hook(__FILE__, 'mbif_plugin_enable');
 function mbif_plugin_disable() {}
 
 register_deactivation_hook(__FILE__, 'mbif_plugin_disable');
+
+/**
+ * Re-runs dbDelta() on already-installed sites when the schema changes
+ * (e.g. widening the iCal URL columns), without waiting for a deactivate/reactivate.
+ */
+function mbif_maybe_upgrade_db() {
+    if (get_option('mbif_db_version') !== MBIF_DB_VERSION) {
+        mbif_plugin_enable();
+    }
+}
+add_action('plugins_loaded', 'mbif_maybe_upgrade_db');
 
 require_once MBIF_DIR . '/functions.php';
 
