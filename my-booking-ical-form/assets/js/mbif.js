@@ -137,7 +137,10 @@ async function fetchIcal(formId, type, disabledDates) {
     if (!response.ok) throw new Error('Failed to fetch calendar: ' + type);
     const text = await response.text();
 
-    const lines = text.split('\n');
+    // RFC 5545 line folding: a continuation line starts with a single space/tab
+    // and must be joined back onto the previous logical line before parsing.
+    const unfolded = text.replace(/\r\n[ \t]|\r[ \t]|\n[ \t]/g, '');
+    const lines = unfolded.split(/\r\n|\r|\n/);
     let entryDate = null, departureDate = null;
 
     lines.forEach(line => {

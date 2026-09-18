@@ -162,6 +162,15 @@ function mbif_fetch_ical($ical_url) {
 }
 
 /**
+ * Un-folds RFC 5545 line folding: continuation lines start with a single
+ * space or tab and must be joined back onto the previous logical line
+ * before parsing, or a long DTSTART/DTEND/SUMMARY value gets truncated.
+ */
+function mbif_unfold_ical($ical_text) {
+    return preg_replace('/\r\n[ \t]|\r[ \t]|\n[ \t]/', '', $ical_text);
+}
+
+/**
  * Parses VEVENT DTSTART/DTEND pairs out of raw iCal text into ['Y-m-d','Y-m-d'] ranges.
  */
 function mbif_parse_ical_ranges($ical_text) {
@@ -171,7 +180,7 @@ function mbif_parse_ical_ranges($ical_text) {
     $entry = null;
     $departure = null;
 
-    foreach (preg_split('/\r\n|\r|\n/', $ical_text) as $line) {
+    foreach (preg_split('/\r\n|\r|\n/', mbif_unfold_ical($ical_text)) as $line) {
         $line = trim($line);
         if (stripos($line, 'DTSTART') === 0) {
             $value = substr(strrchr($line, ':'), 1);
