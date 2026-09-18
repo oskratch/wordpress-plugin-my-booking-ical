@@ -22,14 +22,14 @@
 
     <div class="form-group">
         <div class="calendar-col">
-            <label><?php _e('Entry date', 'my_booking_ical_form'); ?></label>
+            <label for="mbif-entry_date-<?php echo $form_id; ?>"><?php _e('Entry date', 'my_booking_ical_form'); ?></label>
             <div class="mbif-entry-cal"></div>
-            <input type="text" name="entry_date" class="mbif-entry-date" readonly required>
+            <input type="text" id="mbif-entry_date-<?php echo $form_id; ?>" name="entry_date" class="mbif-entry-date" readonly required>
         </div>
         <div class="calendar-col">
-            <label><?php _e('Last night', 'my_booking_ical_form'); ?>*</label>
+            <label for="mbif-departure_date-<?php echo $form_id; ?>"><?php _e('Last night', 'my_booking_ical_form'); ?>*</label>
             <div class="mbif-departure-cal"></div>
-            <input type="text" name="departure_date" class="mbif-departure-date" readonly required>
+            <input type="text" id="mbif-departure_date-<?php echo $form_id; ?>" name="departure_date" class="mbif-departure-date" readonly required>
             <div class="info-additional">* <?php _e('Departure date is the next day before 11am.', 'my_booking_ical_form'); ?></div>
         </div>
     </div>
@@ -38,46 +38,28 @@
     <div class="mbif-error-dates"></div>
 
     <div class="form-group">
-        <?php if (get_option('mbif_label_shown')): ?>
-            <label><?php _e('First Name', 'my_booking_ical_form'); ?></label>
-            <input type="text" name="first_name" required>
-        <?php else: ?>
-            <input type="text" name="first_name" placeholder="<?php esc_attr_e('First Name', 'my_booking_ical_form'); ?>" required>
-        <?php endif; ?>
+        <label for="mbif-first_name-<?php echo $form_id; ?>" class="<?php echo get_option('mbif_label_shown') ? '' : 'mbif-visually-hidden'; ?>"><?php _e('First Name', 'my_booking_ical_form'); ?></label>
+        <input type="text" id="mbif-first_name-<?php echo $form_id; ?>" name="first_name" placeholder="<?php echo get_option('mbif_label_shown') ? '' : esc_attr__('First Name', 'my_booking_ical_form'); ?>" required>
     </div>
 
     <div class="form-group">
-        <?php if (get_option('mbif_label_shown')): ?>
-            <label><?php _e('Last Name', 'my_booking_ical_form'); ?></label>
-            <input type="text" name="last_name" required>
-        <?php else: ?>
-            <input type="text" name="last_name" placeholder="<?php esc_attr_e('Last Name', 'my_booking_ical_form'); ?>" required>
-        <?php endif; ?>
+        <label for="mbif-last_name-<?php echo $form_id; ?>" class="<?php echo get_option('mbif_label_shown') ? '' : 'mbif-visually-hidden'; ?>"><?php _e('Last Name', 'my_booking_ical_form'); ?></label>
+        <input type="text" id="mbif-last_name-<?php echo $form_id; ?>" name="last_name" placeholder="<?php echo get_option('mbif_label_shown') ? '' : esc_attr__('Last Name', 'my_booking_ical_form'); ?>" required>
     </div>
 
     <div class="form-group">
-        <?php if (get_option('mbif_label_shown')): ?>
-            <label><?php _e('Email', 'my_booking_ical_form'); ?></label>
-            <input type="email" name="email" required>
-        <?php else: ?>
-            <input type="email" name="email" placeholder="<?php esc_attr_e('Email', 'my_booking_ical_form'); ?>" required>
-        <?php endif; ?>
+        <label for="mbif-email-<?php echo $form_id; ?>" class="<?php echo get_option('mbif_label_shown') ? '' : 'mbif-visually-hidden'; ?>"><?php _e('Email', 'my_booking_ical_form'); ?></label>
+        <input type="email" id="mbif-email-<?php echo $form_id; ?>" name="email" placeholder="<?php echo get_option('mbif_label_shown') ? '' : esc_attr__('Email', 'my_booking_ical_form'); ?>" required>
     </div>
 
     <div class="form-group">
-        <?php if (get_option('mbif_label_shown')): ?>
-            <label><?php _e('Phone', 'my_booking_ical_form'); ?></label>
-            <input type="text" name="phone">
-        <?php else: ?>
-            <input type="text" name="phone" placeholder="<?php esc_attr_e('Phone', 'my_booking_ical_form'); ?>">
-        <?php endif; ?>
+        <label for="mbif-phone-<?php echo $form_id; ?>" class="<?php echo get_option('mbif_label_shown') ? '' : 'mbif-visually-hidden'; ?>"><?php _e('Phone', 'my_booking_ical_form'); ?></label>
+        <input type="text" id="mbif-phone-<?php echo $form_id; ?>" name="phone" placeholder="<?php echo get_option('mbif_label_shown') ? '' : esc_attr__('Phone', 'my_booking_ical_form'); ?>">
     </div>
 
     <div class="form-group">
-        <?php if (get_option('mbif_label_shown')): ?>
-            <label><?php _e('Select the number of people', 'my_booking_ical_form'); ?></label>
-        <?php endif; ?>
-        <select name="guest_count" required>
+        <label for="mbif-guest_count-<?php echo $form_id; ?>" class="<?php echo get_option('mbif_label_shown') ? '' : 'mbif-visually-hidden'; ?>"><?php _e('Select the number of people', 'my_booking_ical_form'); ?></label>
+        <select id="mbif-guest_count-<?php echo $form_id; ?>" name="guest_count" required>
             <?php if (!get_option('mbif_label_shown')): ?>
                 <option value=""><?php _e('Select the number of people', 'my_booking_ical_form'); ?></option>
             <?php endif; ?>
@@ -89,19 +71,15 @@
 
     <?php if ($item->parking_option): ?>
     <div class="form-group">
-        <label><?php _e('Parking', 'my_booking_ical_form'); ?></label>
-        <input type="radio" name="parking" value="0"> <?php _e('No', 'my_booking_ical_form'); ?>
-        <input type="radio" name="parking" value="1"> <?php _e('Yes', 'my_booking_ical_form'); ?>
+        <span class="mbif-fieldset-label"><?php _e('Parking', 'my_booking_ical_form'); ?></span>
+        <label class="mbif-radio-label"><input type="radio" name="parking" value="0" checked> <?php _e('No', 'my_booking_ical_form'); ?></label>
+        <label class="mbif-radio-label"><input type="radio" name="parking" value="1"> <?php _e('Yes', 'my_booking_ical_form'); ?></label>
     </div>
     <?php endif; ?>
 
     <div class="form-group">
-        <?php if (get_option('mbif_label_shown')): ?>
-            <label><?php _e('Comments', 'my_booking_ical_form'); ?></label>
-            <textarea name="comments"></textarea>
-        <?php else: ?>
-            <textarea name="comments" placeholder="<?php esc_attr_e('Comments', 'my_booking_ical_form'); ?>"></textarea>
-        <?php endif; ?>
+        <label for="mbif-comments-<?php echo $form_id; ?>" class="<?php echo get_option('mbif_label_shown') ? '' : 'mbif-visually-hidden'; ?>"><?php _e('Comments', 'my_booking_ical_form'); ?></label>
+        <textarea id="mbif-comments-<?php echo $form_id; ?>" name="comments" placeholder="<?php echo get_option('mbif_label_shown') ? '' : esc_attr__('Comments', 'my_booking_ical_form'); ?>"></textarea>
     </div>
 
     <div class="form-group">

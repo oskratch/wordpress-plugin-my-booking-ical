@@ -16,8 +16,30 @@ form.booking_ical_form .form-group {
     margin-bottom: 20px;
 }
 
-form.booking_ical_form label.hidden {
-    display: none;
+form.booking_ical_form .mbif-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+form.booking_ical_form .mbif-radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 12px;
+    font-weight: normal;
+}
+
+form.booking_ical_form .mbif-fieldset-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
 }
 
 form.booking_ical_form input:not([type=checkbox]):not([type=radio]),
