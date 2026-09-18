@@ -173,7 +173,7 @@ function my_booking_ical_forms_create() {
             array('%s', '%s', '%s', '%s', '%d', '%f', '%d', '%d')
         );
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_forms')) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms'));
         exit;
     } else {
         require(MBIF_DIR . '/views/admin/forms-create.php');
@@ -212,7 +212,7 @@ function my_booking_ical_forms_edit() {
             array('%d')
         );
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($_POST['id']))) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($_POST['id'])));
         exit;
     } else {
         $item = $wpdb->get_row($wpdb->prepare(
@@ -236,7 +236,7 @@ function my_booking_ical_forms_delete() {
         $wpdb->delete($wpdb->prefix . 'my_booking_ical_requests', array('form_id' => $id), array('%d'));
         $wpdb->delete($wpdb->prefix . 'my_booking_ical_prices', array('form_id' => $id), array('%d'));
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_forms')) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms'));
         exit;
     }
 }

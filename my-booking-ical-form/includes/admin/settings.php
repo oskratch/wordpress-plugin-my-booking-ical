@@ -20,7 +20,7 @@ function my_booking_ical_settings() {
         update_option('min_days_default', intval($_POST['min_days_default']));
         update_option('currency', sanitize_text_field($_POST['currency']));
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_settings')) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_settings'));
         exit;
 
     } else {

@@ -131,7 +131,7 @@ function my_booking_ical_prices_create() {
             array('%d', '%s', '%s', '%f')
         );
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($_POST['form_id']))) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($_POST['form_id'])));
         exit;
 
     } else {
@@ -162,7 +162,7 @@ function my_booking_ical_prices_edit() {
             array('%d')
         );
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($item->form_id))) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($item->form_id)));
         exit;
 
     } else {
@@ -188,7 +188,7 @@ function my_booking_ical_prices_delete() {
 
         $wpdb->delete($wpdb->prefix . 'my_booking_ical_prices', array('id' => $id), array('%d'));
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($item->form_id))) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($item->form_id)));
         exit;
     }
 }

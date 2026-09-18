@@ -174,7 +174,7 @@ function my_booking_ical_requests_show() {
             array('%d')
         );
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_requests_show&id=' . intval($_POST['id']))) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_requests_show&id=' . intval($_POST['id'])));
         exit;
 
     } else {
@@ -217,7 +217,7 @@ function my_booking_ical_requests_validate() {
             array('%d')
         );
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_requests&form_id=' . intval($item->form_id))) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_requests&form_id=' . intval($item->form_id)));
         exit;
     }
 }
@@ -236,7 +236,7 @@ function my_booking_ical_requests_delete() {
 
         $wpdb->delete($wpdb->prefix . 'my_booking_ical_requests', array('id' => $id), array('%d'));
 
-        echo '<script>window.location.href = "' . esc_js(admin_url('admin.php?page=my_booking_ical_requests&form_id=' . intval($item->form_id))) . '"</script>';
+        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_requests&form_id=' . intval($item->form_id)));
         exit;
     }
 }
