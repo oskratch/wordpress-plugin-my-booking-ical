@@ -148,6 +148,18 @@ Found under **My Booking iCal → Settings**:
 - **Read-only sync**: Calendar sync is one-way from external platforms; confirmed bookings must be manually added to Booking.com/Airbnb
 - **Privacy policy**: The form includes a required acceptance of your WordPress Privacy Policy page
 
+## Contributing
+
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up a local environment and submit a pull request.
+
+## Security
+
+Found a vulnerability? Please don't open a public issue — see [SECURITY.md](SECURITY.md) for how to report it privately.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
+
 ## License
 
 Licensed under GPL v2 or later. See [LICENSE](LICENSE) for full details.
@@ -155,4 +167,4 @@ Licensed under GPL v2 or later. See [LICENSE](LICENSE) for full details.
 ---
 
 **Developed by Oscar Periche — [Metalinked](https://metalinked.net/)**  
-Contributions and feedback welcome via [GitHub Issues](https://github.com/oskratch/wordpress-my-booking-ical/issues).
+Contributions and feedback welcome via [GitHub Issues](https://github.com/oskratch/wordpress-plugin-my-booking-ical/issues).
