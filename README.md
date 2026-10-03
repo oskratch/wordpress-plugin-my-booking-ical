@@ -6,16 +6,14 @@ A WordPress plugin for property owners who manage apartments on external platfor
 
 ## Overview
 
-This plugin bridges the gap between external booking platforms and your WordPress website by:
+- Availability is read from the Booking.com and Airbnb iCal feeds
+- Visitors send reservation requests from your own site
+- The administrator reviews and manages requests from a dashboard
+- Prices can change by date range
 
-- Synchronizing availability from Booking.com and Airbnb iCal feeds
-- Allowing visitors to submit reservation requests directly from your site
-- Providing administrators with a dashboard to review and manage incoming requests
-- Supporting flexible pricing strategies with date-range overrides
+**Note:** the plugin collects requests only. It doesn't confirm bookings or take payments: every reservation is confirmed by hand by the administrator.
 
-**Note:** This plugin handles requests only — no automatic bookings or payments are processed. All reservations must be confirmed manually by the administrator.
-
-## Key Features
+## Features
 
 ### Apartment Management
 - Create individual booking forms per apartment
@@ -26,14 +24,14 @@ This plugin bridges the gap between external booking platforms and your WordPres
   - Parking availability
   - Base nightly price
 
-### Dynamic Pricing
+### Pricing
 - Set a base price per apartment
 - Add unlimited special pricing ranges (seasonal rates, holidays, etc.)
 - Prices shown per day directly in the calendar picker
 - Automatic total calculation based on selected dates
 
 ### Availability Synchronization
-- Real-time calendar sync from Booking.com and Airbnb iCal feeds
+- Calendar availability read from the Booking.com and Airbnb iCal feeds
 - Booked dates are automatically disabled in the calendar
 - Read-only synchronization — no data is written back to external platforms
 
