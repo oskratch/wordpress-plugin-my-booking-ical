@@ -17,7 +17,7 @@
 defined('ABSPATH') or die("Action not allowed");
 define('MBIF_DIR', plugin_dir_path(__FILE__));
 define('MBIF_VERSION', '1.1.0');
-define('MBIF_DB_VERSION', '1.2');
+define('MBIF_DB_VERSION', '1.3');
 
 function mbif_Options(){
     return array(
@@ -25,8 +25,8 @@ function mbif_Options(){
         'mbif_emailto' => get_option('admin_email'),
         'mbif_emailto_secondary' => "",
         'mbif_label_shown' => 0,
-        'min_days_default' => 3,
-        'currency' => '€',
+        'mbif_min_days_default' => 3,
+        'mbif_currency' => '€',
     );
 }
 
@@ -36,54 +36,58 @@ function mbif_plugin_enable() {
 
     include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-    $table_name_1 = $wpdb->prefix . "my_booking_ical_forms";
+    // dbDelta() needs one column per line (and two spaces after PRIMARY KEY)
+    // to detect column changes on existing installs.
+    $table_options = "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
 
-    $sql_1 = "CREATE TABLE `" . $table_name_1 . "` (";
-    $sql_1 .= "`id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,";
-    $sql_1 .= "`reference` varchar(30) DEFAULT NULL,";
-    $sql_1 .= "`title` varchar(100) NOT NULL,";
-    $sql_1 .= "`ical_booking_url` varchar(500) DEFAULT NULL,";
-    $sql_1 .= "`ical_airbnb_url` varchar(500) DEFAULT NULL,";
-    $sql_1 .= "`min_days` int(3) NOT NULL,";
-    $sql_1 .= "`price` decimal(5,2) NOT NULL,";
-    $sql_1 .= "`max_capacity` int(2) NOT NULL,";
-    $sql_1 .= "`parking_option` tinyint(1) NOT NULL DEFAULT '0'";
-    $sql_1 .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+    dbDelta("CREATE TABLE {$wpdb->prefix}my_booking_ical_forms (
+  id int(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+  reference varchar(30) DEFAULT NULL,
+  title varchar(100) NOT NULL,
+  ical_booking_url varchar(500) DEFAULT NULL,
+  ical_airbnb_url varchar(500) DEFAULT NULL,
+  min_days int(3) NOT NULL,
+  price decimal(8,2) NOT NULL,
+  max_capacity int(2) NOT NULL,
+  parking_option tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY  (id)
+) $table_options;");
 
-    dbDelta($sql_1);
+    dbDelta("CREATE TABLE {$wpdb->prefix}my_booking_ical_requests (
+  id int(10) NOT NULL AUTO_INCREMENT,
+  form_id int(5) NOT NULL,
+  first_name varchar(80) NOT NULL,
+  last_name varchar(120) NOT NULL,
+  email varchar(80) NOT NULL,
+  phone varchar(30),
+  guest_count int(2) NOT NULL,
+  entry_date date NOT NULL,
+  departure_date date NOT NULL,
+  parking tinyint(1) NOT NULL DEFAULT '0',
+  comments text,
+  summary text,
+  status enum('pending_review','validated','denied') NOT NULL DEFAULT 'pending_review',
+  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY  (id)
+) $table_options;");
 
-    $table_name_2 = $wpdb->prefix . "my_booking_ical_requests";
+    dbDelta("CREATE TABLE {$wpdb->prefix}my_booking_ical_prices (
+  id int(10) NOT NULL AUTO_INCREMENT,
+  form_id int(5) NOT NULL,
+  from_date date NOT NULL,
+  to_date date NOT NULL,
+  price decimal(8,2) NOT NULL,
+  PRIMARY KEY  (id)
+) $table_options;");
 
-    $sql_2 = "CREATE TABLE `" . $table_name_2 . "` (";
-    $sql_2 .= "`id` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,";
-    $sql_2 .= "`form_id` int(5) NOT NULL,";
-    $sql_2 .= "`first_name` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,";
-    $sql_2 .= "`last_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,";
-    $sql_2 .= "`email` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,";
-    $sql_2 .= "`phone` varchar(30) COLLATE utf8mb4_unicode_ci,";
-    $sql_2 .= "`guest_count` int(2) NOT NULL,";
-    $sql_2 .= "`entry_date` date NOT NULL,";
-    $sql_2 .= "`departure_date` date NOT NULL,";
-    $sql_2 .= "`parking` tinyint(1) NOT NULL DEFAULT '0',";
-    $sql_2 .= "`comments` text COLLATE utf8mb4_unicode_ci,";
-    $sql_2 .= "`summary` text COLLATE utf8mb4_unicode_ci,";
-    $sql_2 .= "`status` enum('pending_review','validated','denied') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending_review',";
-    $sql_2 .= "`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP";
-    $sql_2 .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-
-    dbDelta($sql_2);
-
-    $table_name_3 = $wpdb->prefix . "my_booking_ical_prices";
-
-    $sql_3 = "CREATE TABLE `" . $table_name_3 . "` (";
-    $sql_3 .= "`id` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,";
-    $sql_3 .= "`form_id` int(5) NOT NULL,";
-    $sql_3 .= "`from_date` date NOT NULL,";
-    $sql_3 .= "`to_date` date NOT NULL,";
-    $sql_3 .= "`price` decimal(5,2) NOT NULL";
-    $sql_3 .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-
-    dbDelta($sql_3);
+    // Up to 1.1.0 these settings were stored under the unprefixed names
+    // 'min_days_default' and 'currency'; carry existing values over.
+    $legacy_options = array('min_days_default' => 'mbif_min_days_default', 'currency' => 'mbif_currency');
+    foreach ($legacy_options as $old => $new) {
+        if (get_option($new) === false && get_option($old) !== false) {
+            add_option($new, get_option($old));
+        }
+    }
 
     foreach(mbif_Options() as $key => $value){
         add_option($key, $value);
@@ -110,18 +114,3 @@ function mbif_maybe_upgrade_db() {
 add_action('plugins_loaded', 'mbif_maybe_upgrade_db');
 
 require_once MBIF_DIR . '/functions.php';
-
-function mbif_plugin_uninstall() {
-
-    global $wpdb;
-
-    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "my_booking_ical_forms");
-    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "my_booking_ical_requests");
-    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "my_booking_ical_prices");
-
-    foreach(mbif_Options() as $key => $value){
-        delete_option($key);
-    }
-}
-
-register_uninstall_hook(__FILE__, 'mbif_plugin_uninstall');
