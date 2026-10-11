@@ -91,7 +91,7 @@ Total Price:    €1,920
 
 ## Installation
 
-1. **Upload**: Copy the `my-booking-ical-form` folder to `/wp-content/plugins/`
+1. **Upload**: Download `my-booking-ical-form.zip` from the [latest release](https://github.com/oskratch/wordpress-plugin-my-booking-ical/releases/latest) and upload it from **Plugins → Add New → Upload Plugin**, or copy the `my-booking-ical-form` folder to `/wp-content/plugins/`. (GitHub's automatic "Source code" zip contains the whole repository and can't be uploaded to WordPress directly.)
 2. **Activate**: Enable the plugin under **Plugins** in the WordPress admin
 3. **Configure**: Go to **My Booking iCal → Settings** to configure email notifications and global defaults
 4. **Add forms**: Go to **My Booking iCal → Forms** and click **Add New** to set up each apartment
