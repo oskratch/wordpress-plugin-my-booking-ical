@@ -36,7 +36,7 @@ class My_Booking_Ical_Prices extends WP_List_Table {
                 return date("d-m-Y", strtotime($item[$column_name]));
 
             case 'price':
-                return esc_html($item[$column_name]) . ' ' . esc_html(get_option('currency'));
+                return esc_html($item[$column_name]) . ' ' . esc_html(get_option('mbif_currency'));
 
             default:
                 return esc_html($item[$column_name]);
@@ -56,10 +56,7 @@ class My_Booking_Ical_Prices extends WP_List_Table {
     }
 
     function usort_reorder($a, $b) {
-        $orderby = (!empty($_GET['orderby'])) ? sanitize_key($_GET['orderby']) : 'from_date';
-        $order = (!empty($_GET['order'])) ? sanitize_key($_GET['order']) : 'asc';
-        $result = strcmp($a[$orderby], $b[$orderby]);
-        return ($order === 'asc') ? $result : -$result;
+        return mbif_compare_rows($a, $b, array_keys($this->get_sortable_columns()), 'from_date', 'asc');
     }
 
     public function column_from_date($item) {
@@ -110,85 +107,99 @@ class My_Booking_Ical_Prices extends WP_List_Table {
     }
 }
 
-function my_booking_ical_prices_create() {
-    if (isset($_POST['from_date'])) {
-        check_admin_referer('mbif_create_price', 'mbif_nonce');
+/**
+ * Reads and validates the price range fields shared by the create and edit screens.
+ */
+function mbif_price_fields_from_post() {
+    $from_date = mbif_sanitize_ymd(sanitize_text_field(wp_unslash($_POST['from_date'] ?? '')));
+    $to_date = mbif_sanitize_ymd(sanitize_text_field(wp_unslash($_POST['to_date'] ?? '')));
 
-        global $wpdb;
-
-        $from_date = sanitize_text_field($_POST['from_date']);
-        $to_date = sanitize_text_field($_POST['to_date']);
-        $price = floatval($_POST['price']);
-
-        $wpdb->insert(
-            $wpdb->prefix . 'my_booking_ical_prices',
-            array(
-                'form_id'   => intval($_POST['form_id']),
-                'from_date' => $from_date,
-                'to_date'   => $to_date,
-                'price'     => $price
-            ),
-            array('%d', '%s', '%s', '%f')
-        );
-
-        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($_POST['form_id'])));
-        exit;
-
-    } else {
-        require(MBIF_DIR . '/views/admin/prices-create.php');
+    if (!$from_date || !$to_date || $to_date < $from_date) {
+        wp_die(__('The selected dates are invalid.', 'my_booking_ical_form'), '', array('back_link' => true));
     }
+
+    return array(
+        'from_date' => $from_date,
+        'to_date'   => $to_date,
+        'price'     => max(0, floatval($_POST['price'] ?? 0)),
+    );
+}
+
+function my_booking_ical_prices_create_save() {
+    if (!isset($_POST['from_date'])) return;
+
+    check_admin_referer('mbif_create_price', 'mbif_nonce');
+
+    global $wpdb;
+
+    $wpdb->insert(
+        $wpdb->prefix . 'my_booking_ical_prices',
+        array('form_id' => intval($_POST['form_id'])) + mbif_price_fields_from_post(),
+        array('%d', '%s', '%s', '%f')
+    );
+
+    wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($_POST['form_id'])));
+    exit;
+}
+
+function my_booking_ical_prices_create() {
+    require(MBIF_DIR . '/views/admin/prices-create.php');
+}
+
+function my_booking_ical_prices_edit_save() {
+    if (!isset($_POST['id'])) return;
+
+    check_admin_referer('mbif_edit_price', 'mbif_nonce');
+
+    global $wpdb;
+
+    $item = $wpdb->get_row($wpdb->prepare(
+        "SELECT form_id FROM " . $wpdb->prefix . "my_booking_ical_prices WHERE id = %d",
+        intval($_POST['id'])
+    ));
+
+    $wpdb->update(
+        $wpdb->prefix . 'my_booking_ical_prices',
+        mbif_price_fields_from_post(),
+        array('id' => intval($_POST['id'])),
+        array('%s', '%s', '%f'),
+        array('%d')
+    );
+
+    wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($item->form_id ?? 0)));
+    exit;
 }
 
 function my_booking_ical_prices_edit() {
     global $wpdb;
 
-    if (isset($_POST['id'])) {
-        check_admin_referer('mbif_edit_price', 'mbif_nonce');
+    $item = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_prices WHERE id = %d",
+        intval($_GET['id'] ?? 0)
+    ));
 
-        $from_date = sanitize_text_field($_POST['from_date']);
-        $to_date = sanitize_text_field($_POST['to_date']);
-        $price = floatval($_POST['price']);
-
-        $item = $wpdb->get_row($wpdb->prepare(
-            "SELECT form_id FROM " . $wpdb->prefix . "my_booking_ical_prices WHERE id = %d",
-            intval($_POST['id'])
-        ));
-
-        $wpdb->update(
-            $wpdb->prefix . 'my_booking_ical_prices',
-            array('from_date' => $from_date, 'to_date' => $to_date, 'price' => $price),
-            array('id' => intval($_POST['id'])),
-            array('%s', '%s', '%f'),
-            array('%d')
-        );
-
-        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($item->form_id)));
-        exit;
-
-    } else {
-        $item = $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_prices WHERE id = %d",
-            intval($_GET['id'])
-        ));
-        require(MBIF_DIR . '/views/admin/prices-edit.php');
+    if (!$item) {
+        wp_die(__('Price not found.', 'my_booking_ical_form'));
     }
+
+    require(MBIF_DIR . '/views/admin/prices-edit.php');
 }
 
 function my_booking_ical_prices_delete() {
-    if (isset($_GET['id'])) {
-        $id = intval($_GET['id']);
-        check_admin_referer('mbif_delete_price_' . $id);
+    if (!isset($_GET['id'])) return;
 
-        global $wpdb;
+    $id = intval($_GET['id']);
+    check_admin_referer('mbif_delete_price_' . $id);
 
-        $item = $wpdb->get_row($wpdb->prepare(
-            "SELECT form_id FROM " . $wpdb->prefix . "my_booking_ical_prices WHERE id = %d",
-            $id
-        ));
+    global $wpdb;
 
-        $wpdb->delete($wpdb->prefix . 'my_booking_ical_prices', array('id' => $id), array('%d'));
+    $item = $wpdb->get_row($wpdb->prepare(
+        "SELECT form_id FROM " . $wpdb->prefix . "my_booking_ical_prices WHERE id = %d",
+        $id
+    ));
 
-        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($item->form_id)));
-        exit;
-    }
+    $wpdb->delete($wpdb->prefix . 'my_booking_ical_prices', array('id' => $id), array('%d'));
+
+    wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($item->form_id ?? 0)));
+    exit;
 }

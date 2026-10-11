@@ -43,7 +43,7 @@ class My_Booking_Ical_Forms extends WP_List_Table {
                 return '[booking_ical_form form_id="' . intval($item['id']) . '"]';
 
             case 'price':
-                return esc_html($item[$column_name]) . ' ' . esc_html(get_option('currency'));
+                return esc_html($item[$column_name]) . ' ' . esc_html(get_option('mbif_currency'));
 
             case 'parking_option':
                 return $item[$column_name] ? __('Yes', 'my_booking_ical_form') : __('No', 'my_booking_ical_form');
@@ -81,10 +81,7 @@ class My_Booking_Ical_Forms extends WP_List_Table {
     }
 
     function usort_reorder($a, $b) {
-        $orderby = (!empty($_GET['orderby'])) ? sanitize_key($_GET['orderby']) : 'title';
-        $order = (!empty($_GET['order'])) ? sanitize_key($_GET['order']) : 'asc';
-        $result = strcmp($a[$orderby], $b[$orderby]);
-        return ($order === 'asc') ? $result : -$result;
+        return mbif_compare_rows($a, $b, array_keys($this->get_sortable_columns()), 'title', 'asc');
     }
 
     public function column_reference($item) {
@@ -143,100 +140,91 @@ function my_booking_ical_forms() {
     require(MBIF_DIR . '/views/admin/forms-list.php');
 }
 
+/**
+ * Reads and sanitizes the fields shared by the create and edit form screens.
+ */
+function mbif_form_fields_from_post() {
+    return array(
+        'reference'        => sanitize_text_field(wp_unslash($_POST['reference'] ?? '')),
+        'title'            => sanitize_text_field(wp_unslash($_POST['title'] ?? '')),
+        'ical_booking_url' => esc_url_raw(wp_unslash($_POST['ical_booking_url'] ?? ''), array('http', 'https')),
+        'ical_airbnb_url'  => esc_url_raw(wp_unslash($_POST['ical_airbnb_url'] ?? ''), array('http', 'https')),
+        'min_days'         => max(1, intval($_POST['min_days'] ?? 1)),
+        'price'            => max(0, floatval($_POST['price'] ?? 0)),
+        'max_capacity'     => max(1, intval($_POST['max_capacity'] ?? 1)),
+        'parking_option'   => empty($_POST['parking_option']) ? 0 : 1,
+    );
+}
+
+function my_booking_ical_forms_create_save() {
+    if (!isset($_POST['title'])) return;
+
+    check_admin_referer('mbif_create_form', 'mbif_nonce');
+
+    global $wpdb;
+
+    $wpdb->insert(
+        $wpdb->prefix . 'my_booking_ical_forms',
+        mbif_form_fields_from_post(),
+        array('%s', '%s', '%s', '%s', '%d', '%f', '%d', '%d')
+    );
+
+    wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms'));
+    exit;
+}
+
 function my_booking_ical_forms_create() {
-    if (isset($_POST['title'])) {
-        check_admin_referer('mbif_create_form', 'mbif_nonce');
+    require(MBIF_DIR . '/views/admin/forms-create.php');
+}
 
-        global $wpdb;
+function my_booking_ical_forms_edit_save() {
+    if (!isset($_POST['id'])) return;
 
-        $reference = sanitize_text_field($_POST['reference']);
-        $title = sanitize_text_field($_POST['title']);
-        $ical_booking_url = esc_url_raw($_POST['ical_booking_url']);
-        $ical_airbnb_url = esc_url_raw($_POST['ical_airbnb_url']);
-        $min_days = intval($_POST['min_days']);
-        $price = floatval($_POST['price']);
-        $max_capacity = intval($_POST['max_capacity']);
-        $parking_option = intval($_POST['parking_option']);
+    check_admin_referer('mbif_edit_form', 'mbif_nonce');
 
-        $wpdb->insert(
-            $wpdb->prefix . 'my_booking_ical_forms',
-            array(
-                'reference' => $reference,
-                'title' => $title,
-                'ical_booking_url' => $ical_booking_url,
-                'ical_airbnb_url' => $ical_airbnb_url,
-                'min_days' => $min_days,
-                'price' => $price,
-                'max_capacity' => $max_capacity,
-                'parking_option' => $parking_option
-            ),
-            array('%s', '%s', '%s', '%s', '%d', '%f', '%d', '%d')
-        );
+    global $wpdb;
 
-        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms'));
-        exit;
-    } else {
-        require(MBIF_DIR . '/views/admin/forms-create.php');
-    }
+    $wpdb->update(
+        $wpdb->prefix . 'my_booking_ical_forms',
+        mbif_form_fields_from_post(),
+        array('id' => intval($_POST['id'])),
+        array('%s', '%s', '%s', '%s', '%d', '%f', '%d', '%d'),
+        array('%d')
+    );
+
+    wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($_POST['id'])));
+    exit;
 }
 
 function my_booking_ical_forms_edit() {
     global $wpdb;
 
-    if (isset($_POST['id'])) {
-        check_admin_referer('mbif_edit_form', 'mbif_nonce');
+    $item = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_forms WHERE id = %d",
+        intval($_GET['id'] ?? 0)
+    ));
 
-        $reference = sanitize_text_field($_POST['reference']);
-        $title = sanitize_text_field($_POST['title']);
-        $ical_booking_url = esc_url_raw($_POST['ical_booking_url']);
-        $ical_airbnb_url = esc_url_raw($_POST['ical_airbnb_url']);
-        $min_days = intval($_POST['min_days']);
-        $price = floatval($_POST['price']);
-        $max_capacity = intval($_POST['max_capacity']);
-        $parking_option = intval($_POST['parking_option']);
-
-        $wpdb->update(
-            $wpdb->prefix . 'my_booking_ical_forms',
-            array(
-                'reference' => $reference,
-                'title' => $title,
-                'ical_booking_url' => $ical_booking_url,
-                'ical_airbnb_url' => $ical_airbnb_url,
-                'min_days' => $min_days,
-                'price' => $price,
-                'max_capacity' => $max_capacity,
-                'parking_option' => $parking_option
-            ),
-            array('id' => intval($_POST['id'])),
-            array('%s', '%s', '%s', '%s', '%d', '%f', '%d', '%d'),
-            array('%d')
-        );
-
-        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms_edit&id=' . intval($_POST['id'])));
-        exit;
-    } else {
-        $item = $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_forms WHERE id = %d",
-            intval($_GET['id'])
-        ));
-        $table = new My_Booking_Ical_Prices();
-        $table->prepare_items();
-        require(MBIF_DIR . '/views/admin/forms-edit.php');
+    if (!$item) {
+        wp_die(__('Form not found.', 'my_booking_ical_form'));
     }
+
+    $table = new My_Booking_Ical_Prices();
+    $table->prepare_items();
+    require(MBIF_DIR . '/views/admin/forms-edit.php');
 }
 
 function my_booking_ical_forms_delete() {
-    if (isset($_GET['id'])) {
-        $id = intval($_GET['id']);
-        check_admin_referer('mbif_delete_form_' . $id);
+    if (!isset($_GET['id'])) return;
 
-        global $wpdb;
+    $id = intval($_GET['id']);
+    check_admin_referer('mbif_delete_form_' . $id);
 
-        $wpdb->delete($wpdb->prefix . 'my_booking_ical_forms', array('id' => $id), array('%d'));
-        $wpdb->delete($wpdb->prefix . 'my_booking_ical_requests', array('form_id' => $id), array('%d'));
-        $wpdb->delete($wpdb->prefix . 'my_booking_ical_prices', array('form_id' => $id), array('%d'));
+    global $wpdb;
 
-        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms'));
-        exit;
-    }
+    $wpdb->delete($wpdb->prefix . 'my_booking_ical_forms', array('id' => $id), array('%d'));
+    $wpdb->delete($wpdb->prefix . 'my_booking_ical_requests', array('form_id' => $id), array('%d'));
+    $wpdb->delete($wpdb->prefix . 'my_booking_ical_prices', array('form_id' => $id), array('%d'));
+
+    wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_forms'));
+    exit;
 }

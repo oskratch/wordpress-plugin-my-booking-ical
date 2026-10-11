@@ -12,7 +12,7 @@
 				<td><input type="date" name="to_date" class="regular-text ltr" value="<?php echo esc_attr($item->to_date);?>" required /></td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php echo __('Price', 'my_booking_ical_form')?> (<?php echo esc_html(get_option('currency'));?>)</th>
+				<th scope="row"><?php echo __('Price', 'my_booking_ical_form')?> (<?php echo esc_html(get_option('mbif_currency'));?>)</th>
 				<td><input type="number" name="price" step="0.01" min="0" class="regular-text ltr" value="<?php echo esc_attr($item->price);?>" required /></td>
 			</tr>
 		</table>

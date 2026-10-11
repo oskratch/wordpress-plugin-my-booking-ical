@@ -7,7 +7,7 @@
     <div class="my-popup-content">
         <span class="my-popup-close">&times;</span>
         <h3><?php _e('Request sent', 'my_booking_ical_form'); ?></h3>
-        <p><?php _e('We have sent an email to the provided address with the summary of your booking request details. You will receive the confirmation within 24 hours.', 'my_booking_ical_form'); ?></p>
+        <p><?php _e('We have received your booking request. We will contact you within 24 hours to confirm it.', 'my_booking_ical_form'); ?></p>
     </div>
 </div>
 <?php endif; ?>
@@ -27,10 +27,9 @@
             <input type="text" id="mbif-entry_date-<?php echo $form_id; ?>" name="entry_date" class="mbif-entry-date" readonly required>
         </div>
         <div class="calendar-col">
-            <label for="mbif-departure_date-<?php echo $form_id; ?>"><?php _e('Last night', 'my_booking_ical_form'); ?>*</label>
+            <label for="mbif-departure_date-<?php echo $form_id; ?>"><?php _e('Departure date', 'my_booking_ical_form'); ?></label>
             <div class="mbif-departure-cal"></div>
             <input type="text" id="mbif-departure_date-<?php echo $form_id; ?>" name="departure_date" class="mbif-departure-date" readonly required>
-            <div class="info-additional">* <?php _e('Departure date is the next day before 11am.', 'my_booking_ical_form'); ?></div>
         </div>
     </div>
 
@@ -54,7 +53,7 @@
 
     <div class="form-group">
         <label for="mbif-phone-<?php echo $form_id; ?>" class="<?php echo get_option('mbif_label_shown') ? '' : 'mbif-visually-hidden'; ?>"><?php _e('Phone', 'my_booking_ical_form'); ?></label>
-        <input type="text" id="mbif-phone-<?php echo $form_id; ?>" name="phone" placeholder="<?php echo get_option('mbif_label_shown') ? '' : esc_attr__('Phone', 'my_booking_ical_form'); ?>">
+        <input type="tel" id="mbif-phone-<?php echo $form_id; ?>" name="phone" placeholder="<?php echo get_option('mbif_label_shown') ? '' : esc_attr__('Phone', 'my_booking_ical_form'); ?>">
     </div>
 
     <div class="form-group">
@@ -83,11 +82,17 @@
     </div>
 
     <div class="form-group">
-        <input type="checkbox" name="acceptance" required>
-        <span><?php printf(
-            __('I have read and accept the %s', 'my_booking_ical_form'),
-            '<a target="_blank" class="accept-link" href="' . get_privacy_policy_url() . '">' . __('Privacy Policy', 'my_booking_ical_form') . '</a>'
-        ); ?></span>
+        <label class="mbif-acceptance">
+            <input type="checkbox" name="acceptance" required>
+            <span><?php
+            $privacy_url = get_privacy_policy_url();
+            printf(
+                __('I have read and accept the %s', 'my_booking_ical_form'),
+                $privacy_url
+                    ? '<a target="_blank" rel="noopener" class="accept-link" href="' . esc_url($privacy_url) . '">' . __('Privacy Policy', 'my_booking_ical_form') . '</a>'
+                    : __('Privacy Policy', 'my_booking_ical_form')
+            ); ?></span>
+        </label>
     </div>
 
     <div class="form-group">

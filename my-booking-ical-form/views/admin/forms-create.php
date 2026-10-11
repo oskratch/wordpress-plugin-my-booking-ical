@@ -38,11 +38,11 @@
         <tr valign="top">
             <th scope="row"><?php echo __('Minimum number of days that can be reserved', 'my_booking_ical_form')?></th>
             <td>
-                <input type="number" id="min_days" name="min_days" min="1" class="regular-text ltr" value="<?php echo esc_attr( get_option('min_days_default') ); ?>" required />
+                <input type="number" id="min_days" name="min_days" min="1" class="regular-text ltr" value="<?php echo esc_attr( get_option('mbif_min_days_default') ); ?>" required />
             </td>
         </tr>
         <tr valign="top">
-            <th scope="row"><?php echo __('General price', 'my_booking_ical_form')?> (<?php echo esc_html(get_option('currency'));?>)</th>
+            <th scope="row"><?php echo __('General price', 'my_booking_ical_form')?> (<?php echo esc_html(get_option('mbif_currency'));?>)</th>
             <td>
                 <input type="number" id="price" name="price" step="0.01" min="0" class="regular-text ltr" value="" required />
             </td>

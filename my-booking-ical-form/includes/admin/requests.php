@@ -90,10 +90,7 @@ class My_Booking_Ical_Requests extends WP_List_Table {
     }
 
     function usort_reorder($a, $b) {
-        $orderby = (!empty($_GET['orderby'])) ? sanitize_key($_GET['orderby']) : 'created_at';
-        $order = (!empty($_GET['order'])) ? sanitize_key($_GET['order']) : 'desc';
-        $result = strcmp($a[$orderby], $b[$orderby]);
-        return ($order === 'asc') ? $result : -$result;
+        return mbif_compare_rows($a, $b, array_keys($this->get_sortable_columns()), 'created_at', 'desc');
     }
 
     public function column_reference($item) {
@@ -149,94 +146,76 @@ function my_booking_ical_requests() {
 
     $item = $wpdb->get_row($wpdb->prepare(
         "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_forms WHERE id = %d",
-        intval($_GET['form_id'])
+        intval($_GET['form_id'] ?? 0)
     ));
+
+    if (!$item) {
+        wp_die(__('Form not found.', 'my_booking_ical_form'));
+    }
+
     $table = new My_Booking_Ical_Requests($item);
     $table->prepare_items();
 
     require(MBIF_DIR . '/views/admin/requests-list.php');
 }
 
+function my_booking_ical_requests_show_save() {
+    if (!isset($_POST['status'])) return;
+
+    check_admin_referer('mbif_update_status', 'mbif_nonce');
+
+    global $wpdb;
+
+    $allowed_statuses = ['pending_review', 'validated', 'denied'];
+    $status = in_array($_POST['status'], $allowed_statuses, true) ? $_POST['status'] : 'pending_review';
+
+    $wpdb->update(
+        $wpdb->prefix . 'my_booking_ical_requests',
+        array('status' => $status),
+        array('id' => intval($_POST['id'])),
+        array('%s'),
+        array('%d')
+    );
+
+    wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_requests_show&id=' . intval($_POST['id'])));
+    exit;
+}
+
 function my_booking_ical_requests_show() {
     global $wpdb;
 
-    if (isset($_POST['status'])) {
-        check_admin_referer('mbif_update_status', 'mbif_nonce');
+    $item = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_requests WHERE id = %d",
+        intval($_GET['id'] ?? 0)
+    ));
 
-        $allowed_statuses = ['pending_review', 'validated', 'denied'];
-        $status = in_array($_POST['status'], $allowed_statuses) ? $_POST['status'] : 'pending_review';
-
-        $wpdb->update(
-            $wpdb->prefix . 'my_booking_ical_requests',
-            array('status' => $status),
-            array('id' => intval($_POST['id'])),
-            array('%s'),
-            array('%d')
-        );
-
-        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_requests_show&id=' . intval($_POST['id'])));
-        exit;
-
-    } else {
-        $item = $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_requests WHERE id = %d",
-            intval($_GET['id'])
-        ));
-        $form = $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_forms WHERE id = %d",
-            intval($item->form_id)
-        ));
-
-        $table = new My_Booking_Ical_Requests($form);
-        $table->prepare_items();
-
-        require(MBIF_DIR . '/views/admin/requests-show.php');
+    if (!$item) {
+        wp_die(__('Request not found.', 'my_booking_ical_form'));
     }
-}
 
-function my_booking_ical_requests_validate() {
-    global $wpdb;
+    $form = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM " . $wpdb->prefix . "my_booking_ical_forms WHERE id = %d",
+        intval($item->form_id)
+    ));
 
-    if (isset($_GET['id'])) {
-        $id = intval($_GET['id']);
-        check_admin_referer('mbif_validate_request_' . $id);
-
-        $allowed_statuses = ['pending_review', 'validated', 'denied'];
-        $status = in_array($_GET['value'], $allowed_statuses) ? $_GET['value'] : 'pending_review';
-
-        $item = $wpdb->get_row($wpdb->prepare(
-            "SELECT form_id FROM " . $wpdb->prefix . "my_booking_ical_requests WHERE id = %d",
-            $id
-        ));
-
-        $wpdb->update(
-            $wpdb->prefix . 'my_booking_ical_requests',
-            array('status' => $status),
-            array('id' => $id),
-            array('%s'),
-            array('%d')
-        );
-
-        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_requests&form_id=' . intval($item->form_id)));
-        exit;
-    }
+    require(MBIF_DIR . '/views/admin/requests-show.php');
 }
 
 function my_booking_ical_requests_delete() {
-    if (isset($_GET['id'])) {
-        $id = intval($_GET['id']);
-        check_admin_referer('mbif_delete_request_' . $id);
+    if (!isset($_GET['id'])) return;
 
-        global $wpdb;
+    $id = intval($_GET['id']);
+    check_admin_referer('mbif_delete_request_' . $id);
 
-        $item = $wpdb->get_row($wpdb->prepare(
-            "SELECT form_id FROM " . $wpdb->prefix . "my_booking_ical_requests WHERE id = %d",
-            $id
-        ));
+    global $wpdb;
 
-        $wpdb->delete($wpdb->prefix . 'my_booking_ical_requests', array('id' => $id), array('%d'));
+    $item = $wpdb->get_row($wpdb->prepare(
+        "SELECT form_id FROM " . $wpdb->prefix . "my_booking_ical_requests WHERE id = %d",
+        $id
+    ));
 
-        wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_requests&form_id=' . intval($item->form_id)));
-        exit;
-    }
+    $wpdb->delete($wpdb->prefix . 'my_booking_ical_requests', array('id' => $id), array('%d'));
+
+    wp_safe_redirect(admin_url('admin.php?page=my_booking_ical_requests&form_id=' . intval($item->form_id ?? 0)));
+    exit;
 }

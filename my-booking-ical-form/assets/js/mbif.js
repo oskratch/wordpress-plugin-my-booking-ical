@@ -10,6 +10,7 @@ function initBookingForm(wrapEl, config) {
     const $ = jQuery;
     const $wrap = $(wrapEl);
     const $form = $wrap.find('.booking_ical_form');
+    // Booked nights as 'yyyymmdd' strings (a booking blocks every night from DTSTART to the day before DTEND).
     const disabledDates = [];
 
     const $entryCal      = $wrap.find('.mbif-entry-cal');
@@ -39,7 +40,7 @@ function initBookingForm(wrapEl, config) {
             $errorDates.html(config.i18n.selectDates);
             return;
         }
-        if (calculateDaysDifference(entryDate, departureDate) < config.minDays) {
+        if (countNights(entryDate, departureDate) < config.minDays) {
             $errorDates.html(config.i18n.minStay.replace('%d', config.minDays));
             return;
         }
@@ -69,36 +70,78 @@ function initBookingForm(wrapEl, config) {
             dateFormat: 'dd-mm-yy',
             minDate: today,
             firstDay: 1,
-            beforeShowDay: function(date) {
-                const stringDate = $.datepicker.formatDate('yymmdd', date);
-                if (disabledDates.indexOf(stringDate) !== -1) return [false];
-                return [true, '', getPriceForDate(date, config.priceRanges, config.basePrice) + ' ' + config.currency];
-            }
         };
 
+        // Entry: the first night must be free.
         $entryCal.datepicker(Object.assign({}, sharedOpts, {
+            beforeShowDay: function(date) {
+                if (isBooked(date)) return [false];
+                return [true, '', getPriceForDate(date, config.priceRanges, config.basePrice) + ' ' + config.currency];
+            },
             onSelect: function(date) {
-                $departureCal.datepicker('option', 'minDate', addOneDay(date));
                 $entryVal.val(date);
+                const minDeparture = addDays(date, Math.max(1, config.minDays));
+                $departureCal.datepicker('option', 'minDate', minDeparture);
+                // Departure on the day the next booking starts is fine; later isn't.
+                $departureCal.datepicker('option', 'maxDate', firstBookedNightAfter(date));
+
+                const departure = $departureVal.val();
+                if (departure && (countNights(date, departure) < 1 || rangeHasBookedNight(date, departure))) {
+                    $departureVal.val('');
+                    $priceContainer.html('');
+                }
                 updatePrice(date, $departureVal.val());
             }
         }));
 
+        // Departure: the guest leaves that morning, so only the night before must be free.
         $departureCal.datepicker(Object.assign({}, sharedOpts, {
+            minDate: addDays(formatDateForOutput(today), 1),
+            beforeShowDay: function(date) {
+                const previousNight = new Date(date);
+                previousNight.setDate(previousNight.getDate() - 1);
+                return [!isBooked(previousNight)];
+            },
             onSelect: function(date) {
+                const entry = $entryVal.val();
+                if (entry && rangeHasBookedNight(entry, date)) {
+                    $departureVal.val('');
+                    $priceContainer.html('');
+                    $errorDates.html(config.i18n.unavailable);
+                    return;
+                }
                 $departureVal.val(date);
-                updatePrice($entryVal.val(), date);
+                updatePrice(entry, date);
             }
         }));
+    }
+
+    function isBooked(date) {
+        return disabledDates.indexOf($.datepicker.formatDate('yymmdd', date)) !== -1;
+    }
+
+    function rangeHasBookedNight(startStr, endStr) {
+        const cur = parseDate(startStr);
+        const end = parseDate(endStr);
+        while (cur < end) {
+            if (isBooked(cur)) return true;
+            cur.setDate(cur.getDate() + 1);
+        }
+        return false;
+    }
+
+    function firstBookedNightAfter(startStr) {
+        const start = $.datepicker.formatDate('yymmdd', parseDate(startStr));
+        const next = disabledDates.filter(d => d > start).sort()[0];
+        if (!next) return null;
+        return new Date(+next.substring(0, 4), +next.substring(4, 6) - 1, +next.substring(6, 8));
     }
 
     function updatePrice(startDateStr, endDateStr) {
         if (!startDateStr || !endDateStr) return;
 
-        const [sd, sm, sy] = startDateStr.split('-').map(Number);
-        const [ed, em, ey] = endDateStr.split('-').map(Number);
-        const start = new Date(sy, sm - 1, sd);
-        const end   = new Date(ey, em - 1, ed);
+        const start = parseDate(startDateStr);
+        const end   = parseDate(endDateStr);
 
         if (start >= end) { $priceContainer.html(''); return; }
 
@@ -115,7 +158,7 @@ function initBookingForm(wrapEl, config) {
             cur.setDate(cur.getDate() + 1);
         }
 
-        const totalPrice = segments.reduce((sum, s) => sum + s.nights * s.price, 0);
+        const totalPrice = Math.round(segments.reduce((sum, s) => sum + s.nights * s.price, 0) * 100) / 100;
 
         let html = '<ul class="priceList">';
         segments.forEach(s => {
@@ -177,26 +220,29 @@ function addDateRange(startStr, endStr, disabledDates) {
     }
 }
 
-function addOneDay(dateString) {
+// Parses a 'dd-mm-yyyy' datepicker value into a local-midnight Date.
+function parseDate(dateString) {
     const [day, month, year] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day);
-    date.setDate(date.getDate() + 1);
+    return new Date(year, month - 1, day);
+}
+
+function addDays(dateString, days) {
+    const date = parseDate(dateString);
+    date.setDate(date.getDate() + days);
     return formatDateForOutput(date);
 }
 
-function calculateDaysDifference(date1, date2) {
-    const [day1, month1, year1] = date1.split('-').map(Number);
-    const [day2, month2, year2] = date2.split('-').map(Number);
-    const startDate = new Date(year1, month1 - 1, day1);
-    const endDate   = new Date(year2, month2 - 1, day2);
-    return Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+// Nights between check-in and check-out (the departure day itself isn't a night).
+function countNights(entryDate, departureDate) {
+    return Math.round((parseDate(departureDate) - parseDate(entryDate)) / (1000 * 60 * 60 * 24));
 }
 
 function getPriceForDate(date, priceRanges, defaultPrice) {
+    // Compare as 'YYYY-MM-DD' strings: new Date('YYYY-MM-DD') is UTC midnight,
+    // which shifts range boundaries by a day in non-UTC timezones.
+    const day = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
     for (const range of priceRanges) {
-        const startDate = new Date(range.start);
-        const endDate   = new Date(range.end);
-        if (date >= startDate && date <= endDate) {
+        if (day >= range.start && day <= range.end) {
             return removeDecimalIfZero(range.price);
         }
     }

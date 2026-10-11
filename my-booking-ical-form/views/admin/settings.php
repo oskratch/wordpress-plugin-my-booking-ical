@@ -1,5 +1,8 @@
 <div class="wrap">
   <h1><?php echo __('My Booking iCal Forms Settings', 'my_booking_ical_form')?></h1>
+  <?php if (!empty($_GET['settings-updated'])): ?>
+    <div class="notice notice-success is-dismissible"><p><?php echo esc_html__('Settings saved.'); ?></p></div>
+  <?php endif; ?>
   <form method="post" action="">
     <?php wp_nonce_field('mbif_settings', 'mbif_nonce'); ?>
     <table class="form-table">
@@ -41,20 +44,20 @@
           </td>
         </tr>
         <tr valign="top">
-          <th scope="row"><label for="min_days_default"><?php echo __('Minimum number of days that can be reserved.', 'my_booking_ical_form')?></label></th>
+          <th scope="row"><label for="mbif_min_days_default"><?php echo __('Minimum number of days that can be reserved.', 'my_booking_ical_form')?></label></th>
           <td>
-            <input type="number" min="1" id="min_days_default" name="min_days_default" class="regular-text ltr" value="<?php echo esc_attr( get_option('min_days_default') ); ?>" />
+            <input type="number" min="1" id="mbif_min_days_default" name="mbif_min_days_default" class="regular-text ltr" value="<?php echo esc_attr( get_option('mbif_min_days_default') ); ?>" />
             <p class="description">
               <?php echo __('Each apartment has the option to customize this value.', 'my_booking_ical_form')?>
             </p>
           </td>
         </tr>
         <tr valign="top">
-          <th scope="row"><label for="currency"><?php echo __('Currency', 'my_booking_ical_form')?></label></th>
+          <th scope="row"><label for="mbif_currency"><?php echo __('Currency', 'my_booking_ical_form')?></label></th>
           <td>
-            <select name="currency" id="currency">
-              <option<?php echo get_option('currency') == '€' ? " selected='selected'" : ""; ?> value='€'>Euro €</option>
-              <option<?php echo get_option('currency') == '$' ? " selected='selected'" : ""; ?> value='$'>Dollar $</option>
+            <select name="mbif_currency" id="mbif_currency">
+              <option<?php echo get_option('mbif_currency') == '€' ? " selected='selected'" : ""; ?> value='€'>Euro €</option>
+              <option<?php echo get_option('mbif_currency') == '$' ? " selected='selected'" : ""; ?> value='$'>Dollar $</option>
             </select>
           </td>
         </tr>
