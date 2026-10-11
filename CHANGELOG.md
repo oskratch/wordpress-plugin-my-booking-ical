@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.2.0](https://github.com/oskratch/wordpress-plugin-my-booking-ical/compare/v1.1.0...v1.2.0) (2026-10-11)
+
+
+### Bug Fixes
+
+* apply schema upgrades, really clean up on uninstall, prefix options ([b7ab7b0](https://github.com/oskratch/wordpress-plugin-my-booking-ical/commit/b7ab7b0c93e1e8b920e1c111d7e428dc80d91965))
+* admin redirects, booking night count and form validation ([c07b81f](https://github.com/oskratch/wordpress-plugin-my-booking-ical/commit/c07b81ff7fb888dfcb88838c76188a6be1e13f40))
+
+
+### Miscellaneous Chores
+
+* sync translations with the source and add Catalan .mo ([5d065de](https://github.com/oskratch/wordpress-plugin-my-booking-ical/commit/5d065dee2111beb0f8c50e97d5e5cdf1b89e3a46))
+* bump version to 1.2.0
+
+
+### Documentation
+
+* install from the release zip ([d7d655a](https://github.com/oskratch/wordpress-plugin-my-booking-ical/commit/d7d655a81864a2d681cd4d61ec1b78177dc608cd))
+
 ## [1.1.0](https://github.com/oskratch/wordpress-plugin-my-booking-ical/compare/v1.0.2...v1.1.0) (2026-09-18)
 
 

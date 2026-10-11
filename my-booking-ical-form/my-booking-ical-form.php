@@ -5,7 +5,7 @@
  * Description: A form that allows you to request apartment or room reservations through contact. A calendar is used to select a date range and connects to an iCal file to turn off reserved dates.
  * Author: Oscar Periche, Metalinked
  * Author URI: https://metalinked.net/
- * Version: 1.1.0
+ * Version: 1.2.0
  * Requires at least: 6.3
  * Requires PHP: 8
  * License: GPL v2 or later
@@ -16,7 +16,7 @@
 
 defined('ABSPATH') or die("Action not allowed");
 define('MBIF_DIR', plugin_dir_path(__FILE__));
-define('MBIF_VERSION', '1.1.0');
+define('MBIF_VERSION', '1.2.0');
 define('MBIF_DB_VERSION', '1.3');
 
 function mbif_Options(){
